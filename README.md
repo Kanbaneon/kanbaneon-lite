@@ -1,6 +1,6 @@
 # Canban
 
----
+**📌A canvas based Kanban board**
 
 <p>Version 0.0.0</p>
 <p>by </p>

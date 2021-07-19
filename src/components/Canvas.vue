@@ -3,16 +3,14 @@
 </template>
 
 <script>
-import { initCanvas, initList } from "../utils/DrawCanvas";
+import { initCanvas } from "../utils/DrawCanvas";
 
 export default {
   methods: {
     initCanvas,
-    initList,
   },
   mounted() {
     this.initCanvas();
-    this.initList();
   },
 };
 </script>

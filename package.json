@@ -1,5 +1,6 @@
 {
 	"version": "0.0.0",
+	"description": "📌A canvas based Kanban board",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
