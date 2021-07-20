@@ -1,5 +1,7 @@
 <template>
-  <div id="canban-canvas"></div>
+  <div class="canvas-wrapper">
+    <div id="canban-canvas"></div>
+  </div>
 </template>
 
 <script>
@@ -23,5 +25,16 @@ export default {
 }
 .subtitle {
   color: #35495e;
+}
+.canvas-wrapper {
+  width: 100%;
+  max-height: 90vh;
+  overflow: scroll;
+}
+</style>
+
+<style>
+.konvajs-content {
+  background-color: #42b883;
 }
 </style>

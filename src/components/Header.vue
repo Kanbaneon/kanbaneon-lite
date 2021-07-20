@@ -19,7 +19,12 @@
     @ok="handleOk"
     @cancel="handleCancel"
   >
-    <a-input placeholder="Name" v-model="name" @change="handleNameChange" />
+    <input
+      class="ant-input"
+      placeholder="Name"
+      v-model="name"
+      @change="handleNameChange"
+    />
     <label class="error-label">{{ error.name }}</label>
     <template v-slot:footer>
       <a-button key="back" @click="handleCancel"> Cancel </a-button>

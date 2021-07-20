@@ -25,6 +25,8 @@ export function initCanvas() {
   const width = window.innerWidth;
   const height = window.innerHeight;
 
+  const largestList = kanbanList.length;
+
   const largestChildren = Math.max.apply(
     0,
     kanbanList.map((v) => v.children?.length)
@@ -32,7 +34,7 @@ export function initCanvas() {
 
   __konva.stage = new Konva.Stage({
     container: "canban-canvas",
-    width: width - 20,
+    width: largestList > 5 ? width - 20 + (largestList - 5) * 295 : width - 20,
     height: largestChildren > 3 ? height + (largestChildren - 3) * 180 : height,
     x: 0,
     y: 0,
@@ -40,7 +42,6 @@ export function initCanvas() {
 
   __konva.layer = new Konva.Layer();
   __konva.stage.add(__konva.layer);
-  __konva.stage.container().style.background = "#42b883";
   __konva.stage.container().style.cursor = "move";
 
   initList();
