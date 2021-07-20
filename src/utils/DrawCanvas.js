@@ -8,7 +8,8 @@ export const __konva = {
 };
 
 export const __dnd = {
-  dragmove: null,
+  list: null,
+  item: null,
 };
 
 export function addMoreList(newList) {

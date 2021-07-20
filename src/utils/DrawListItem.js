@@ -2,16 +2,23 @@ import { kanbanList } from "./Data.mock";
 import { initCanvas, __dnd, __konva } from "./DrawCanvas";
 
 function searchIntersection(r2) {
-  const allRects = __konva.stage
-    .find("Rect")
-    .filter(
-      (rect) =>
-        !!rect.attrs.id &&
-        rect.attrs.id.includes("LIST-") &&
-        !rect.attrs.id.includes("CARD-")
-    );
+  const allRects = __konva.stage.find("Rect");
 
-  const collided = allRects.filter((r1) => {
+  const listRects = allRects.filter(
+    (rect) =>
+      !!rect.attrs.id &&
+      rect.attrs.id.includes("LIST-") &&
+      !rect.attrs.id.includes("CARD-")
+  );
+
+  const cardRects = allRects.filter(
+    (rect) =>
+      !!rect.attrs.id &&
+      rect.attrs.id.includes("LIST-") &&
+      rect.attrs.id.includes("CARD-")
+  );
+
+  const collidedLists = listRects.filter((r1) => {
     if (
       r1 !== r2 &&
       !r2.attrs.id.includes(r1.attrs.id) &&
@@ -25,7 +32,23 @@ function searchIntersection(r2) {
       return true;
     }
   });
-  return collided[0];
+
+  const collidedItems = cardRects.filter((r1) => {
+    if (
+      r1 !== r2 &&
+      !r2.attrs.id.includes(r1.attrs.id) &&
+      !(
+        r2.position().x > r1.x() + r1.width() - 200 ||
+        r2.position().x + r2.width() - 200 < r1.x() ||
+        r2.position().y > r1.y() + r1.height() ||
+        r2.position().y + r2.height() < r1.y()
+      )
+    ) {
+      return true;
+    }
+  });
+
+  return { list: collidedLists[0], item: collidedItems[0] };
 }
 
 export function initListItem(list, x, e) {
@@ -78,48 +101,72 @@ export function initListItem(list, x, e) {
       titleText.x(x + 20);
       titleText.y(y + 10);
 
-      const dragOverList = searchIntersection(e.target);
-      __dnd.dragmove = dragOverList;
+      const { list, item } = searchIntersection(e.target);
+      __dnd.list = list;
+      __dnd.item = item;
     });
 
     cardRect.on("dragend", (e) => {
-      const dragOverList = __dnd.dragmove;
-      const parentItem = kanbanList.find((data) => data?.id === list?.id);
+      const dragOverList = __dnd.list;
+      const dragOverItem = __dnd.item;
+      const parentList = kanbanList.find((data) => data?.id === list?.id);
+
+      if (!dragOverList) {
+        const parentItemIndex = parentList.children.findIndex(
+          (item) =>
+            item?.id.toString() === dragOverItem?.attrs?.id.split("CARD-")[1]
+        );
+        if (parentItemIndex > -1) {
+          parentList.children = parentList.children.filter(
+            (v) => v.id !== card.id
+          );
+          parentList.children.splice(parentItemIndex, 0, card);
+        }
+      }
 
       if (!!dragOverList) {
-        const foundItem = kanbanList.find(
+        const foundList = kanbanList.find(
           (data) =>
             data?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
         );
+        const foundItemIndex = foundList.children.findIndex(
+          (item) =>
+            item?.id.toString() === dragOverItem?.attrs?.id.split("CARD-")[1]
+        );
 
         if (
-          !!parentItem &&
-          parentItem.children.map((v) => v.id).includes(card.id)
+          !!parentList &&
+          parentList.children.map((v) => v.id).includes(card.id)
         ) {
-          parentItem.children = parentItem.children.filter(
+          parentList.children = parentList.children.filter(
             (v) => v.id !== card.id
           );
-          if (parentItem.children.length <= 4) {
+          if (parentList.children.length <= 4) {
             initCanvas();
           }
         }
 
         if (
-          !!foundItem &&
-          !foundItem.children.map((v) => v.id).includes(card.id)
+          !!foundList &&
+          !foundList.children.map((v) => v.id).includes(card.id)
         ) {
-          foundItem.children.push(card);
-          if (foundItem.children.length > 3) {
+          if (foundItemIndex > -1) {
+            foundList.children.splice(foundItemIndex, 0, card);
+          } else {
+            foundList.children.push(card);
+          }
+          if (foundList.children.length > 3) {
             initCanvas();
           }
           cardRect.destroy();
           titleText.destroy();
-          initListItem(foundItem, dragOverList.x());
+          initListItem(foundList, dragOverList.x());
         }
       }
 
-      initListItem(parentItem, x);
-      __dnd.dragmove = null;
+      initListItem(parentList, x);
+      __dnd.list = null;
+      __dnd.item = null;
     });
 
     yCount = yCount + 190;
