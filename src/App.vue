@@ -19,4 +19,7 @@ export default {
 .ant-card-body {
   padding: 8px;
 }
+.error-label {
+  color: rgb(243, 67, 67);
+}
 </style>

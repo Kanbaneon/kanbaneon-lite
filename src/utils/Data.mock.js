@@ -1,4 +1,4 @@
-export const mockData = [
+export const kanbanList = [
   {
     id: "L1",
     name: "To-Do",
