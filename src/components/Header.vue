@@ -81,7 +81,7 @@ export default {
 <style scoped>
 .title {
   display: inline;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
   color: #42b883;
 }

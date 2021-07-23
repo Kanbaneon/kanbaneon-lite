@@ -1,1 +1,3 @@
-export const kanbanList = [{ id: 1, name: "To-Do", children: [] }];
+export const kanbanList = [
+  { id: "L1", name: "To-Do", children: [{ id: "L1C1", text: "Loram Ipsum" }] },
+];

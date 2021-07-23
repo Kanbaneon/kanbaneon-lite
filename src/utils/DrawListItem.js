@@ -52,16 +52,7 @@ function searchIntersection(r2) {
 }
 
 export function initListItem(list, x, e) {
-  const standardRect = new Konva.Rect({
-    x: x + 10,
-    fill: "#35495e",
-    height: 180,
-    width: 275,
-    cornerRadius: 8,
-    shadowBlur: 1,
-    draggable: true,
-  });
-
+  const standardRect = this.drawFns().getCard({ x });
   const standardText = new Konva.Text({
     text: "",
     fontSize: 18,
@@ -86,6 +77,8 @@ export function initListItem(list, x, e) {
   list.children.forEach((card) => {
     const cardRect = standardRect.clone();
     cardRect.id(`LIST-${list?.id}-CARD-${card?.id}`);
+    cardRect.attrs.cardDetails = card;
+    cardRect.attrs.parentList = list;
     cardRect.y(yCount);
 
     const titleText = standardText.clone();
@@ -142,7 +135,7 @@ export function initListItem(list, x, e) {
             (v) => v.id !== card.id
           );
           if (parentList.children.length <= 4) {
-            initCanvas();
+            this.drawFns().initCanvas();
           }
         }
 
@@ -156,15 +149,15 @@ export function initListItem(list, x, e) {
             foundList.children.push(card);
           }
           if (foundList.children.length > 3) {
-            initCanvas();
+            this.drawFns().initCanvas();
           }
           cardRect.destroy();
           titleText.destroy();
-          initListItem(foundList, dragOverList.x());
+          this.drawFns().initListItem(foundList, dragOverList.x());
         }
       }
 
-      initListItem(parentList, x);
+      this.drawFns().initListItem(parentList, x);
       __dnd.list = null;
       __dnd.item = null;
     });

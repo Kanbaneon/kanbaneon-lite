@@ -25,6 +25,11 @@ export default function getAddButton() {
   buttonGroup.add(xLine);
   buttonGroup.add(yLine);
 
+  buttonGroup.on("click", (e) => {
+    this.visible = true;
+    this.addingList = e.currentTarget.attrs.parentList;
+  });
+
   buttonGroup.on("mouseenter", (e) => {
     e.target.getStage().container().style.cursor = "pointer";
   });

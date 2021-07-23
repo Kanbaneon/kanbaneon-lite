@@ -1,7 +1,5 @@
 import { kanbanList } from "./Data.mock";
-import getAddButton from "./DrawAddButton";
 import { __konva } from "./DrawCanvas";
-import { initListItem } from "./DrawListItem";
 
 export function initList() {
   const height = window.innerHeight;
@@ -9,14 +7,7 @@ export function initList() {
   const largestChildren = Math.max(
     ...kanbanList.map((v) => v.children?.length)
   );
-  const standardRect = new Konva.Rect({
-    y: 10,
-    fill: "#FFFFFF",
-    height: largestChildren > 3 ? height + (largestChildren - 3) * 180 : height,
-    width: 295,
-    cornerRadius: 8,
-    shadowBlur: 1,
-  });
+  const standardRect = this.drawFns().getTile({ largestChildren, height });
 
   const standardTitleRect = new Konva.Rect({
     y: 10,
@@ -32,11 +23,11 @@ export function initList() {
     y: 24,
   });
 
-  const standardAddButton = getAddButton();
+  const standardAddButton = this.drawFns().getAddButton();
 
   let xCount = 10;
   kanbanList.forEach((list, index) => {
-    initListItem(list, xCount);
+    this.drawFns().initListItem(list, xCount);
 
     const listRect = standardRect.clone();
     listRect.id(`LIST-${list?.id}`);
@@ -45,6 +36,7 @@ export function initList() {
     const titleRect = standardTitleRect.clone();
     const titleText = standardText.clone();
     titleText.text(list?.name);
+    addCardButton.attrs.parentList = list;
 
     addCardButton.x(xCount + 260);
     listRect.x(xCount);

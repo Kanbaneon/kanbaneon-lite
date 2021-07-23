@@ -1,7 +1,10 @@
 import Konva from "konva";
 import { kanbanList } from "./Data.mock";
-import { initList } from "./DrawList";
 import * as uuid from "uuid";
+
+const __vue = {
+  instance: null,
+};
 
 export const __konva = {
   stage: null,
@@ -13,16 +16,59 @@ export const __dnd = {
   item: null,
 };
 
+export function addMoreCard(newCard) {
+  const foundList = kanbanList.find((v) => v.id === newCard.listId);
+  if (!Array.isArray(foundList?.children)) {
+    return;
+  }
+
+  foundList.children.push({
+    id: uuid.v4(),
+    text: newCard?.text,
+  });
+  this.drawFns().initList();
+}
+
 export function addMoreList(newList) {
   kanbanList.push({
     id: uuid.v4(),
     name: newList?.name,
     children: [],
   });
-  initCanvas();
+
+  __vue.instance.drawFns().initCanvas();
+}
+
+export function deleteCard(deletingCard) {
+  const foundList = kanbanList.find((v) => v.id === deletingCard.listId);
+  if (!Array.isArray(foundList?.children)) {
+    return;
+  }
+
+  foundList.children = foundList.children.filter(
+    (v) => v.id !== deletingCard.id
+  );
+  this.drawFns().initList();
+}
+
+export function editCard(editingCard) {
+  const foundList = kanbanList.find((v) => v.id === editingCard.listId);
+  if (!Array.isArray(foundList?.children)) {
+    return;
+  }
+
+  const foundItem = foundList.children.find((v) => v.id === editingCard.id);
+  if (!foundItem?.id) {
+    return;
+  }
+
+  foundItem.text = editingCard.text;
+  this.drawFns().initList();
 }
 
 export function initCanvas() {
+  __vue.instance = this;
+
   const width = window.innerWidth - 20;
   const height = window.innerHeight - 115;
 
@@ -43,5 +89,5 @@ export function initCanvas() {
   __konva.stage.add(__konva.layer);
   __konva.stage.container().style.cursor = "move";
 
-  initList();
+  this.drawFns().initList();
 }
