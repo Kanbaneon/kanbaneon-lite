@@ -1,6 +1,7 @@
 import Konva from "konva";
 import { kanbanList } from "./Data.mock";
 import { initList } from "./DrawList";
+import * as uuid from "uuid";
 
 export const __konva = {
   stage: null,
@@ -14,7 +15,7 @@ export const __dnd = {
 
 export function addMoreList(newList) {
   kanbanList.push({
-    id: `L${kanbanList?.length + 5}`,
+    id: uuid.v4(),
     name: newList?.name,
     children: [],
   });
@@ -22,19 +23,17 @@ export function addMoreList(newList) {
 }
 
 export function initCanvas() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+  const width = window.innerWidth - 20;
+  const height = window.innerHeight - 115;
 
   const largestList = kanbanList.length;
-
-  const largestChildren = Math.max.apply(
-    0,
-    kanbanList.map((v) => v.children?.length)
+  const largestChildren = Math.max(
+    ...kanbanList.map((v) => v.children?.length)
   );
 
   __konva.stage = new Konva.Stage({
     container: "canban-canvas",
-    width: largestList > 5 ? width - 20 + (largestList - 5) * 295 : width - 20,
+    width: largestList > 4 ? width + (largestList - 4) * 295 : width,
     height: largestChildren > 3 ? height + (largestChildren - 3) * 180 : height,
     x: 0,
     y: 0,

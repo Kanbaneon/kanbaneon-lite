@@ -1,13 +1,13 @@
 import { kanbanList } from "./Data.mock";
+import getAddButton from "./DrawAddButton";
 import { __konva } from "./DrawCanvas";
 import { initListItem } from "./DrawListItem";
 
 export function initList() {
   const height = window.innerHeight;
 
-  const largestChildren = Math.max.apply(
-    0,
-    kanbanList.map((v) => v.children?.length)
+  const largestChildren = Math.max(
+    ...kanbanList.map((v) => v.children?.length)
   );
   const standardRect = new Konva.Rect({
     y: 10,
@@ -32,6 +32,8 @@ export function initList() {
     y: 24,
   });
 
+  const standardAddButton = getAddButton();
+
   let xCount = 10;
   kanbanList.forEach((list, index) => {
     initListItem(list, xCount);
@@ -39,10 +41,12 @@ export function initList() {
     const listRect = standardRect.clone();
     listRect.id(`LIST-${list?.id}`);
 
+    const addCardButton = standardAddButton.clone();
     const titleRect = standardTitleRect.clone();
     const titleText = standardText.clone();
     titleText.text(list?.name);
 
+    addCardButton.x(xCount + 260);
     listRect.x(xCount);
     titleRect.x(xCount);
     titleText.x(xCount + 16);
@@ -50,7 +54,9 @@ export function initList() {
     __konva.layer.add(listRect);
     __konva.layer.add(titleRect);
     __konva.layer.add(titleText);
+    __konva.layer.add(addCardButton);
 
+    addCardButton.moveToBottom();
     titleText.moveToBottom();
     titleRect.moveToBottom();
     listRect.moveToBottom();
