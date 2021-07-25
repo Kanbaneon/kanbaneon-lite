@@ -1,9 +1,11 @@
 <template>
   <a-card class="header">
-    <a-col :span="20">
-      <h2 class="title">CAN<span class="subtitle">BAN</span></h2>
+    <a-col :span="showNewList ? 20 : 24">
+      <h2 class="title" @click="handleDirectHome">
+        CAN<span class="subtitle">BAN</span>
+      </h2>
     </a-col>
-    <a-col :span="4">
+    <a-col :span="4" v-if="showNewList">
       <a-button
         size="large"
         type="primary"
@@ -42,6 +44,7 @@ import { addMoreList } from "../utils/DrawCanvas";
 export default {
   data() {
     return {
+      showNewList: false,
       visible: false,
       name: "",
       error: {
@@ -52,9 +55,17 @@ export default {
   components: {
     PlusIcon,
   },
+  watch: {
+    $route(to, from) {
+      this.handleCheckRoute();
+    },
+  },
   methods: {
     openModal() {
       this.visible = true;
+    },
+    handleDirectHome() {
+      this.$router.push("/");
     },
     handleOk() {
       if (!this.name) {
@@ -74,6 +85,12 @@ export default {
       this.error.name = "";
       this.visible = false;
     },
+    handleCheckRoute() {
+      console.log(this.$route);
+      if (this.$route.matched?.[0]?.path === "/board/:id") {
+        this.showNewList = true;
+      }
+    },
   },
 };
 </script>
@@ -84,6 +101,7 @@ export default {
   font-size: 32px;
   font-weight: bold;
   color: #42b883;
+  cursor: pointer;
 }
 
 .subtitle {

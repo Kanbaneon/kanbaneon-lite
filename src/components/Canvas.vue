@@ -135,6 +135,8 @@ export default {
     },
     handleCancelCardDialog() {
       this.cardDialog = {
+        ...this.cardDialog,
+        visible: false,
         editingCard: {
           text: "",
         },
@@ -142,6 +144,8 @@ export default {
     },
     handleCancelListDialog() {
       this.listDialog = {
+        ...this.listDialog,
+        visible: false,
         editingList: {
           name: "",
         },

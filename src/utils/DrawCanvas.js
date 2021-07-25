@@ -1,6 +1,8 @@
 import Konva from "konva";
-import { kanbanList } from "./Data.mock";
 import * as uuid from "uuid";
+import { store } from "./Data.store";
+
+const { kanbanList } = store;
 
 const __vue = {
   instance: null,

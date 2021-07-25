@@ -1,5 +1,7 @@
-import { kanbanList } from "./Data.mock";
 import { __dnd, __konva } from "./DrawCanvas";
+import { store } from "./Data.store";
+
+const { kanbanList } = store;
 
 export function searchIntersection(r2) {
   const allRects = __konva.stage.find("Rect");
@@ -8,7 +10,8 @@ export function searchIntersection(r2) {
     (rect) =>
       !!rect.attrs.id &&
       rect.attrs.id.includes("LIST-") &&
-      !rect.attrs.id.includes("CARD-")
+      !rect.attrs.id.includes("CARD-") &&
+      !rect.attrs.id.includes("TITLE-RECT")
   );
 
   const cardRects = allRects.filter(
@@ -120,10 +123,12 @@ export function initListItem(list, x, e) {
           (data) =>
             data?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
         );
-        const foundItemIndex = foundList.children.findIndex(
-          (item) =>
-            item?.id.toString() === dragOverItem?.attrs?.id.split("CARD-")[1]
-        );
+        const foundItemIndex =
+          !!foundList?.children &&
+          foundList.children.findIndex(
+            (item) =>
+              item?.id.toString() === dragOverItem?.attrs?.id.split("CARD-")[1]
+          );
 
         if (
           !!parentList &&

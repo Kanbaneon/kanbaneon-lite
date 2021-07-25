@@ -1,7 +1,9 @@
 import Konva from "konva";
-import { kanbanList } from "./Data.mock";
 import { __dnd, __konva } from "./DrawCanvas";
 import { searchIntersection } from "./DrawListItem";
+import { store } from "./Data.store";
+
+const { kanbanList } = store;
 
 export default function getTile({ largestChildren, height }) {
   const tile = new Konva.Rect({
@@ -93,6 +95,7 @@ export default function getTile({ largestChildren, height }) {
   tile.on("click", (e) => {
     this.listDialog = {
       ...this.listDialog,
+      creating: false,
       visible: true,
       title: "Edit List",
       editingList: {

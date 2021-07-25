@@ -1,5 +1,7 @@
-import { kanbanList } from "./Data.mock";
 import { __konva } from "./DrawCanvas";
+import { store } from "./Data.store";
+
+const { kanbanList } = store;
 
 export function initList() {
   const height = window.innerHeight;

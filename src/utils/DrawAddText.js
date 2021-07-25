@@ -1,7 +1,9 @@
 import Konva from "konva";
-import { kanbanList } from "./Data.mock";
 import { __dnd, __konva } from "./DrawCanvas";
 import { searchIntersection } from "./DrawListItem";
+import { store } from "./Data.store";
+
+const { kanbanList } = store;
 
 export default function getAddText() {
   const text = new Konva.Text({
@@ -103,6 +105,7 @@ export default function getAddText() {
     this.listDialog = {
       ...this.listDialog,
       visible: true,
+      creating: false,
       title: "Edit List",
       editingList: {
         ...e?.currentTarget?.attrs?.listDetails,

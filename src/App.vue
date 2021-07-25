@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <Canvas />
+  <router-view />
 </template>
 
 <script>
@@ -18,6 +18,9 @@ export default {
 <style>
 .ant-card-body {
   padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .error-label {
   color: rgb(243, 67, 67);
