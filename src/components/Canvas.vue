@@ -180,7 +180,13 @@ export default {
       this.editList(editingList);
       this.handleCancelListDialog();
     },
-    handleDeleteList() {},
+    handleDeleteList() {
+      const deletingList = {
+        listId: this.listDialog.editingList.id,
+      };
+      this.deleteList(deletingList);
+      this.handleCancelListDialog();
+    },
     handleDeleteCard() {
       const deletingCard = {
         id: this.cardDialog.editingCard.id,

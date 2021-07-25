@@ -39,7 +39,17 @@ export function addMoreList(newList) {
   __vue.instance.drawFns().initCanvas();
 }
 
-export function deleteList(deletingList) {}
+export function deleteList(deletingList) {
+  const foundListIndex = kanbanList.findIndex(
+    (v) => v.id === deletingList.listId
+  );
+  if (foundListIndex <= -1) {
+    return;
+  }
+
+  kanbanList.splice(foundListIndex, 1);
+  this.drawFns().initList();
+}
 
 export function editList(editingList) {
   const foundList = kanbanList.find((v) => v.id === editingList.listId);
