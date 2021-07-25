@@ -39,6 +39,18 @@ export function addMoreList(newList) {
   __vue.instance.drawFns().initCanvas();
 }
 
+export function deleteList(deletingList) {}
+
+export function editList(editingList) {
+  const foundList = kanbanList.find((v) => v.id === editingList.listId);
+  if (!foundList?.id) {
+    return;
+  }
+
+  foundList.name = editingList.name;
+  this.drawFns().initList();
+}
+
 export function deleteCard(deletingCard) {
   const foundList = kanbanList.find((v) => v.id === deletingCard.listId);
   if (!Array.isArray(foundList?.children)) {

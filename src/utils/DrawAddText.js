@@ -3,39 +3,38 @@ import { kanbanList } from "./Data.mock";
 import { __dnd, __konva } from "./DrawCanvas";
 import { searchIntersection } from "./DrawListItem";
 
-export default function getTile({ largestChildren, height }) {
-  const tile = new Konva.Rect({
-    y: 10,
-    fill: "#FFFFFF",
-    height: largestChildren > 3 ? height + (largestChildren - 3) * 180 : height,
-    width: 295,
-    cornerRadius: 8,
-    shadowBlur: 1,
+export default function getAddText() {
+  const text = new Konva.Text({
+    text: "",
+    fontSize: 20,
+    y: 24,
+    width: 290,
+    height: 200,
     draggable: true,
   });
 
-  tile.on("dragmove", (e) => {
+  text.on("dragmove", (e) => {
     const list = e?.currentTarget?.attrs?.listDetails;
     const stage = e.currentTarget.getStage();
     const { x, y } = e.target.position();
 
     const titleRect = stage.findOne(`#LIST-${list?.id}-TITLE-RECT`);
-    titleRect.x(x);
-    titleRect.y(y);
+    titleRect.x(x - 16);
+    titleRect.y(y - 14);
 
     const addMoreButton = stage.findOne(`#LIST-${list?.id}-ADD-MORE-BTN`);
-    addMoreButton.x(x + 260);
-    addMoreButton.y(y + 25);
+    addMoreButton.x(x + 244);
+    addMoreButton.y(y + 9);
 
-    const titleText = stage
+    const tileRect = stage
       .find(`#LIST-${list?.id}`)
-      .find((v) => v instanceof Konva.Text);
-    titleText.x(x + 16);
-    titleText.y(y + 14);
+      .find((v) => v instanceof Konva.Rect);
+    tileRect.x(x - 16);
+    tileRect.y(y - 14);
 
-    e?.currentTarget.moveToTop();
+    tileRect.moveToTop();
     titleRect.moveToTop();
-    titleText.moveToTop();
+    e?.currentTarget.moveToTop();
     addMoreButton.moveToTop();
 
     const allCards = stage
@@ -45,16 +44,16 @@ export default function getTile({ largestChildren, height }) {
           !!rect.attrs.id && rect.attrs.id.includes(`LIST-${list?.id}-CARD`)
       );
 
-    let yCount = 60;
+    let yCount = 46;
     allCards.forEach((card) => {
       const relatedText = stage.findOne(
         `#LIST-${list?.id}-TEXT-${card.attrs.cardDetails.id}`
       );
 
-      card.x(x + 10);
+      card.x(x - 5);
       card.y(y + yCount);
 
-      relatedText.x(x + 20);
+      relatedText.x(x + 5);
       relatedText.y(y + yCount + 10);
 
       card.moveToTop();
@@ -66,7 +65,7 @@ export default function getTile({ largestChildren, height }) {
     });
   });
 
-  tile.on("dragend", (e) => {
+  text.on("dragend", (e) => {
     const list = e?.currentTarget?.attrs?.listDetails;
     const dragOverList = __dnd.list;
     if (!!dragOverList) {
@@ -90,7 +89,17 @@ export default function getTile({ largestChildren, height }) {
     __dnd.item = null;
   });
 
-  tile.on("click", (e) => {
+  text.on("click", (e) => {
+    if (!e?.currentTarget?.attrs?.listDetails) {
+      return (this.listDialog = {
+        ...this.listDialog,
+        creating: true,
+        visible: true,
+        title: "Enter the name of new list",
+        editingList: {},
+      });
+    }
+
     this.listDialog = {
       ...this.listDialog,
       visible: true,
@@ -101,5 +110,5 @@ export default function getTile({ largestChildren, height }) {
     };
   });
 
-  return tile;
+  return text;
 }

@@ -17,26 +17,30 @@ export function initList() {
     cornerRadius: [8, 8, 0, 0],
   });
 
-  const standardText = new Konva.Text({
-    text: "",
-    fontSize: 20,
-    y: 24,
-  });
-
+  const standardText = this.drawFns().getAddText();
   const standardAddButton = this.drawFns().getAddButton();
 
   let xCount = 10;
+
+  __konva.layer.destroyChildren();
   kanbanList.forEach((list, index) => {
     this.drawFns().initListItem(list, xCount);
 
     const listRect = standardRect.clone();
     listRect.id(`LIST-${list?.id}`);
+    listRect.attrs.listDetails = list;
 
     const addCardButton = standardAddButton.clone();
+    addCardButton.id(`LIST-${list?.id}-ADD-MORE-BTN`);
+    addCardButton.attrs.parentList = list;
+
     const titleRect = standardTitleRect.clone();
     const titleText = standardText.clone();
+
+    titleRect.id(`LIST-${list?.id}-TITLE-RECT`);
+    titleText.id(`LIST-${list?.id}`);
+    titleText.attrs.listDetails = list;
     titleText.text(list?.name);
-    addCardButton.attrs.parentList = list;
 
     addCardButton.x(xCount + 260);
     listRect.x(xCount);
@@ -57,13 +61,16 @@ export function initList() {
   });
 
   const addMoreRect = standardRect.clone();
+  addMoreRect.height(240);
+  addMoreRect.draggable(false);
   addMoreRect.x(xCount);
   addMoreRect.fill("rgba(255,255,255,0.3)");
   addMoreRect.stroke("white");
   addMoreRect.dash([5, 5]);
 
   const addMoreText = standardText.clone();
-  addMoreText.text(`Click "NEW LIST" Button to add more list`);
+  addMoreText.draggable(false);
+  addMoreText.text(`Click here or "NEW LIST" button to add more list`);
   addMoreText.x(xCount + 10);
   addMoreText.fontSize(15);
   addMoreText.fill("white");

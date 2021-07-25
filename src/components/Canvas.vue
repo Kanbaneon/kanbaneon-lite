@@ -8,10 +8,42 @@
     @ok="handleOk"
     @cancel="handleCancel"
   >
-    <textarea class="ant-input" placeholder="Type here..." v-model="message" />
+    <textarea
+      rows="8"
+      class="ant-input"
+      placeholder="Type here..."
+      v-model="message"
+    />
     <template v-slot:footer>
       <a-button key="back" @click="handleCancel"> Cancel </a-button>
       <a-button key="submit" type="primary" @click="handleOk">
+        Confirm
+      </a-button>
+    </template>
+  </a-modal>
+  <a-modal
+    :title="listDialog.title"
+    :visible="listDialog.visible"
+    @ok="handleOkListDialog"
+    @cancel="handleCancelListDialog"
+  >
+    <input
+      class="ant-input"
+      placeholder="Name"
+      v-model="listDialog.editingList.name"
+      @change="handleNameChange"
+    />
+    <label class="error-label">{{ listDialog.error.name }}</label>
+    <template v-slot:footer>
+      <a-button
+        v-if="!listDialog.creating"
+        class="btn-danger"
+        type="danger"
+        @click="handleDeleteList"
+        >Delete</a-button
+      >
+      <a-button key="back" @click="handleCancelListDialog"> Cancel </a-button>
+      <a-button key="submit" type="primary" @click="handleOkListDialog">
         Confirm
       </a-button>
     </template>
@@ -46,12 +78,16 @@ import {
   addMoreList,
   editCard,
   deleteCard,
+  editList,
+  deleteList,
 } from "../utils/DrawCanvas";
 import { initList } from "../utils/DrawList";
 import { initListItem } from "../utils/DrawListItem";
 import getAddButton from "../utils/DrawAddButton";
+import getAddText from "../utils/DrawAddText";
 import getCard from "../utils/DrawCard";
 import getTile from "../utils/DrawTile";
+import getText from "../utils/DrawText";
 
 export default {
   data() {
@@ -64,6 +100,14 @@ export default {
           text: "",
         },
       },
+      listDialog: {
+        editingList: {
+          name: "",
+        },
+        error: {
+          name: "",
+        },
+      },
     };
   },
   methods: {
@@ -73,14 +117,18 @@ export default {
         initList: initList.bind(this),
         initListItem: initListItem.bind(this),
         getAddButton: getAddButton.bind(this),
+        getAddText: getAddText.bind(this),
         getCard: getCard.bind(this),
         getTile: getTile.bind(this),
+        getText: getText.bind(this),
       };
     },
     addMoreCard,
     addMoreList,
     editCard,
     deleteCard,
+    editList,
+    deleteList,
     handleCancel() {
       this.visible = false;
       this.message = "";
@@ -89,6 +137,16 @@ export default {
       this.cardDialog = {
         editingCard: {
           text: "",
+        },
+      };
+    },
+    handleCancelListDialog() {
+      this.listDialog = {
+        editingList: {
+          name: "",
+        },
+        error: {
+          name: "",
         },
       };
     },
@@ -106,6 +164,23 @@ export default {
       this.editCard(editingCard);
       this.handleCancelCardDialog();
     },
+    handleOkListDialog() {
+      if (!!this.listDialog?.creating) {
+        const newList = {
+          name: this.listDialog.editingList.name,
+        };
+        this.addMoreList(newList);
+        return this.handleCancelListDialog();
+      }
+
+      const editingList = {
+        listId: this.listDialog.editingList.id,
+        name: this.listDialog.editingList.name,
+      };
+      this.editList(editingList);
+      this.handleCancelListDialog();
+    },
+    handleDeleteList() {},
     handleDeleteCard() {
       const deletingCard = {
         id: this.cardDialog.editingCard.id,
@@ -113,6 +188,10 @@ export default {
       };
       this.deleteCard(deletingCard);
       this.handleCancelCardDialog();
+    },
+    handleNameChange(e) {
+      this.name = e.target.value;
+      this.error.name = !this.name ? "*required" : "";
     },
   },
   mounted() {

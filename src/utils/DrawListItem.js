@@ -1,7 +1,7 @@
 import { kanbanList } from "./Data.mock";
-import { initCanvas, __dnd, __konva } from "./DrawCanvas";
+import { __dnd, __konva } from "./DrawCanvas";
 
-function searchIntersection(r2) {
+export function searchIntersection(r2) {
   const allRects = __konva.stage.find("Rect");
 
   const listRects = allRects.filter(
@@ -53,12 +53,7 @@ function searchIntersection(r2) {
 
 export function initListItem(list, x, e) {
   const standardRect = this.drawFns().getCard({ x });
-  const standardText = new Konva.Text({
-    text: "",
-    fontSize: 18,
-    fill: "white",
-    x: x + 20,
-  });
+  const standardText = this.drawFns().getText({ x });
 
   let yCount = 70;
 
@@ -84,22 +79,25 @@ export function initListItem(list, x, e) {
     const titleText = standardText.clone();
     titleText.id(`LIST-${list?.id}-TEXT-${card?.id}`);
     titleText.text(card?.text);
+
+    titleText.attrs.cardDetails = card;
+    titleText.attrs.parentList = list;
     titleText.y(yCount + 10);
 
-    cardRect.on("dragmove", (e) => {
+    titleText.on("dragmove", (e) => {
+      cardRect.moveToTop();
       e.target.moveToTop();
-      titleText.moveToTop();
 
       const { x, y } = e.target.position();
-      titleText.x(x + 20);
-      titleText.y(y + 10);
+      cardRect.x(x - 20);
+      cardRect.y(y - 10);
 
       const { list, item } = searchIntersection(e.target);
       __dnd.list = list;
       __dnd.item = item;
     });
 
-    cardRect.on("dragend", (e) => {
+    titleText.on("dragend", (e) => {
       const dragOverList = __dnd.list;
       const dragOverItem = __dnd.item;
       const parentList = kanbanList.find((data) => data?.id === list?.id);
