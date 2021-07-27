@@ -1,11 +1,16 @@
-# Canban
+# Kanbaneon
 
 **📌A canvas based Kanban board**
 
 <p>Version 0.0.0</p>
-<p>by </p>
+<p>by m3yevn</p>
 
 <hr/>
+
+- Easy and Fast Drag And Drop Kanban Card
+- Attractive UI/UX design
+- No DOM element for Kanban
+- Canvas for rendering 2D Scrum Board
 
 ## ⭐ Public Url
 
@@ -42,7 +47,9 @@ This project does not have a license.
 
 - ant-design-vue : $ ^2.2.2
 - konva : $ ^8.1.1
+- uuid : $ ^8.3.2
 - vue : $ ^3.0.5
+- vue-router : $ 4
 
 ## Dev Dependencies
 

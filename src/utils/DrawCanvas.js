@@ -2,7 +2,8 @@ import Konva from "konva";
 import * as uuid from "uuid";
 import { store } from "./Data.store";
 
-const { kanbanList } = store;
+const kanbanList = () =>
+  store.kanbanBoards.find((v) => v.id === store.currentBoardID).kanbanList;
 
 const __vue = {
   instance: null,
@@ -19,7 +20,7 @@ export const __dnd = {
 };
 
 export function addMoreCard(newCard) {
-  const foundList = kanbanList.find((v) => v.id === newCard.listId);
+  const foundList = kanbanList().find((v) => v.id === newCard.listId);
   if (!Array.isArray(foundList?.children)) {
     return;
   }
@@ -32,7 +33,7 @@ export function addMoreCard(newCard) {
 }
 
 export function addMoreList(newList) {
-  kanbanList.push({
+  kanbanList().push({
     id: uuid.v4(),
     name: newList?.name,
     children: [],
@@ -42,19 +43,19 @@ export function addMoreList(newList) {
 }
 
 export function deleteList(deletingList) {
-  const foundListIndex = kanbanList.findIndex(
+  const foundListIndex = kanbanList().findIndex(
     (v) => v.id === deletingList.listId
   );
   if (foundListIndex <= -1) {
     return;
   }
 
-  kanbanList.splice(foundListIndex, 1);
+  kanbanList().splice(foundListIndex, 1);
   this.drawFns().initList();
 }
 
 export function editList(editingList) {
-  const foundList = kanbanList.find((v) => v.id === editingList.listId);
+  const foundList = kanbanList().find((v) => v.id === editingList.listId);
   if (!foundList?.id) {
     return;
   }
@@ -64,7 +65,7 @@ export function editList(editingList) {
 }
 
 export function deleteCard(deletingCard) {
-  const foundList = kanbanList.find((v) => v.id === deletingCard.listId);
+  const foundList = kanbanList().find((v) => v.id === deletingCard.listId);
   if (!Array.isArray(foundList?.children)) {
     return;
   }
@@ -76,7 +77,7 @@ export function deleteCard(deletingCard) {
 }
 
 export function editCard(editingCard) {
-  const foundList = kanbanList.find((v) => v.id === editingCard.listId);
+  const foundList = kanbanList().find((v) => v.id === editingCard.listId);
   if (!Array.isArray(foundList?.children)) {
     return;
   }
@@ -96,9 +97,9 @@ export function initCanvas() {
   const width = window.innerWidth - 20;
   const height = window.innerHeight - 115;
 
-  const largestList = kanbanList.length;
+  const largestList = kanbanList().length;
   const largestChildren = Math.max(
-    ...kanbanList.map((v) => v.children?.length)
+    ...kanbanList().map((v) => v.children?.length)
   );
 
   __konva.stage = new Konva.Stage({

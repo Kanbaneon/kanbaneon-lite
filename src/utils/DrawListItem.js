@@ -1,7 +1,8 @@
 import { __dnd, __konva } from "./DrawCanvas";
 import { store } from "./Data.store";
 
-const { kanbanList } = store;
+const kanbanList = () =>
+  store.kanbanBoards.find((v) => v.id === store.currentBoardID).kanbanList;
 
 export function searchIntersection(r2) {
   const allRects = __konva.stage.find("Rect");
@@ -103,7 +104,7 @@ export function initListItem(list, x, e) {
     titleText.on("dragend", (e) => {
       const dragOverList = __dnd.list;
       const dragOverItem = __dnd.item;
-      const parentList = kanbanList.find((data) => data?.id === list?.id);
+      const parentList = kanbanList().find((data) => data?.id === list?.id);
 
       if (!dragOverList) {
         const parentItemIndex = parentList.children.findIndex(
@@ -119,7 +120,7 @@ export function initListItem(list, x, e) {
       }
 
       if (!!dragOverList) {
-        const foundList = kanbanList.find(
+        const foundList = kanbanList().find(
           (data) =>
             data?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
         );

@@ -2,7 +2,7 @@
   <a-card class="header">
     <a-col :span="showNewList ? 20 : 24">
       <h2 class="title" @click="handleDirectHome">
-        CAN<span class="subtitle">BAN</span>
+        KAN<span class="subtitle">BANEON</span>
       </h2>
     </a-col>
     <a-col :span="4" v-if="showNewList">
@@ -39,6 +39,7 @@
 
 <script>
 import PlusIcon from "../assets/PlusIcon.vue";
+import { store } from "../utils/Data.store";
 import { addMoreList } from "../utils/DrawCanvas";
 
 export default {
@@ -86,9 +87,9 @@ export default {
       this.visible = false;
     },
     handleCheckRoute() {
-      console.log(this.$route);
       if (this.$route.matched?.[0]?.path === "/board/:id") {
         this.showNewList = true;
+        store.currentBoardID = this.$route?.params?.id;
       }
     },
   },

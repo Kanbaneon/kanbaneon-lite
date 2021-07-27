@@ -1,27 +1,32 @@
 {
-	"version": "0.0.0",
-	"description": "📌A canvas based Kanban board",
-	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"serve": "vite preview"
-	},
-	"dependencies": {
-		"ant-design-vue": "^2.2.2",
-		"konva": "^8.1.1",
-		"uuid": "^8.3.2",
-		"vue": "^3.0.5",
-		"vue-router": "4"
-	},
-	"devDependencies": {
-		"@vitejs/plugin-vue": "^1.2.5",
-		"@vue/compiler-sfc": "^3.0.5",
-		"vite": "^2.4.2"
-	},
-	"author": "",
-	"funFacts": [],
-	"badges": [],
-	"techStacks": [],
-	"screenshots": [],
-	"name": "canban"
+  "version": "0.0.0",
+  "description": "📌A canvas based Kanban board",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "ant-design-vue": "^2.2.2",
+    "konva": "^8.1.1",
+    "uuid": "^8.3.2",
+    "vue": "^3.0.5",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.2.5",
+    "@vue/compiler-sfc": "^3.0.5",
+    "vite": "^2.4.2"
+  },
+  "author": "m3yevn",
+  "funFacts": [
+    "Easy and Fast Drag And Drop Kanban Card",
+    "Attractive UI/UX design",
+    "No DOM element for Kanban",
+    "Canvas for rendering 2D Scrum Board"
+  ],
+  "badges": [],
+  "techStacks": [],
+  "screenshots": [],
+  "name": "kanbaneon"
 }
