@@ -90,6 +90,8 @@ export default {
       if (this.$route.matched?.[0]?.path === "/board/:id") {
         this.showNewList = true;
         store.currentBoardID = this.$route?.params?.id;
+      } else {
+        this.showNewList = false;
       }
     },
   },
