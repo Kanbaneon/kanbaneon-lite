@@ -2,14 +2,14 @@ import { __konva } from "./DrawCanvas";
 import { store } from "./Data.store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID).kanbanList;
+  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
 
 export function initList() {
   const height = window.innerHeight;
 
-  const largestChildren = Math.max(
-    ...kanbanList().map((v) => v.children?.length)
-  );
+  const largestChildren =
+    !!kanbanList?.length &&
+    Math.max(...kanbanList().map((v) => v.children?.length));
   const standardRect = this.drawFns().getTile({ largestChildren, height });
 
   const standardTitleRect = new Konva.Rect({
@@ -26,6 +26,11 @@ export function initList() {
   let xCount = 10;
 
   __konva.layer.destroyChildren();
+
+  if (!kanbanList()) {
+    return;
+  }
+
   kanbanList().forEach((list, index) => {
     this.drawFns().initListItem(list, xCount);
 

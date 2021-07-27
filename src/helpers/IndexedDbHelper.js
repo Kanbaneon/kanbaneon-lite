@@ -1,8 +1,8 @@
-const INDEXED_DB = Object.freeze({
+export const INDEXED_DB = Object.freeze({
   name: "canban",
   version: 1,
   objectStores: {
-    KanbanList: "KanbanList",
+    KANBAN_BOARDS: "KANBAN_BOARDS",
   },
 });
 
@@ -71,7 +71,7 @@ class IndexedDbHelper {
    * @description createObjectStores when version upgrade
    */
   createStore() {
-    this.db.createObjectStore(INDEXED_DB.objectStores.KanbanList, {
+    this.db.createObjectStore(INDEXED_DB.objectStores.KANBAN_BOARDS, {
       autoIncrement: true,
     });
   }

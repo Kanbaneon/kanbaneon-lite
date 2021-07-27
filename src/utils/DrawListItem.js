@@ -2,7 +2,7 @@ import { __dnd, __konva } from "./DrawCanvas";
 import { store } from "./Data.store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID).kanbanList;
+  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
 
 export function searchIntersection(r2) {
   const allRects = __konva.stage.find("Rect");

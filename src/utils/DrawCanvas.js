@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 import { store } from "./Data.store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID).kanbanList;
+  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
 
 const __vue = {
   instance: null,
@@ -97,10 +97,9 @@ export function initCanvas() {
   const width = window.innerWidth - 20;
   const height = window.innerHeight - 115;
 
-  const largestList = kanbanList().length;
-  const largestChildren = Math.max(
-    ...kanbanList().map((v) => v.children?.length)
-  );
+  const largestList = kanbanList()?.length;
+  const largestChildren =
+    !!largestList && Math.max(...kanbanList().map((v) => v.children?.length));
 
   __konva.stage = new Konva.Stage({
     container: "canban-canvas",

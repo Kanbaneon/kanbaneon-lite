@@ -88,6 +88,7 @@ import getAddText from "../utils/DrawAddText";
 import getCard from "../utils/DrawCard";
 import getTile from "../utils/DrawTile";
 import getText from "../utils/DrawText";
+import { store } from "../utils/Data.store";
 
 export default {
   data() {
@@ -200,11 +201,19 @@ export default {
       this.handleCancelCardDialog();
     },
     handleNameChange(e) {
-      this.name = e.target.value;
-      this.error.name = !this.name ? "*required" : "";
+      this.listDialog.editingList.name = e.target.value;
+      this.listDialog.error.name = !this.listDialog?.editingList?.name
+        ? "*required"
+        : "";
     },
   },
   mounted() {
+    const currentList = store.kanbanBoards.find(
+      (v) => v.id === store.currentBoardID
+    );
+    if (!currentList) {
+      this.$router.push("/");
+    }
     this.drawFns().initCanvas();
   },
 };

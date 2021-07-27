@@ -83,7 +83,15 @@ export default {
     GetStartedImg,
     PlusIcon,
   },
+  mounted() {
+    this.handleDataSync();
+  },
   methods: {
+    async handleDataSync() {
+      await store.openDatabase();
+      await store.getFromDB();
+      this.boards = store.kanbanBoards;
+    },
     handleDirect(id) {
       this.$router.push(`/board/${id}`);
     },
@@ -104,6 +112,9 @@ export default {
       };
       this.boards.push(newBoard);
       this.handleCancelDialog();
+
+      store.kanbanBoards = JSON.parse(JSON.stringify(this.boards));
+      store.setToDB();
     },
   },
 };

@@ -4,7 +4,7 @@ import { searchIntersection } from "./DrawListItem";
 import { store } from "./Data.store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID).kanbanList;
+  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
 
 export default function getAddText() {
   const text = new Konva.Text({
