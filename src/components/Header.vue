@@ -1,6 +1,6 @@
 <template>
   <a-card class="header">
-    <a-col :span="showNewList ? 18 : 22">
+    <a-col :span="showNewList ? 17 : 21">
       <h2 class="title" @click="handleDirectHome">
         KAN<span class="subtitle">BANEON</span>
       </h2>
@@ -24,7 +24,16 @@
         ><span class="add-new-btn-text">SAVE</span></a-button
       >
     </a-col>
-    <a-col :span="1"></a-col>
+    <a-col :span="1" class="icon-btn-wrapper">
+      <div
+        class="icon-btn"
+        v-if="showNewList"
+        shape="round"
+        @click="visibleEditBoard = true"
+      >
+        <DotsIcon />
+      </div>
+    </a-col>
     <a-col :span="1"
       ><div class="avatar" :size="64"><UserIcon /></div
     ></a-col>
@@ -50,6 +59,29 @@
     </template>
   </a-modal>
   <a-modal
+    title="Edit board"
+    :visible="visibleEditBoard"
+    @ok="handleOkEditBoard"
+    @cancel="handleCancelEditBoard"
+  >
+    <input
+      class="ant-input"
+      placeholder="Name"
+      v-model="boardDialog.editingBoard.name"
+      @change="handleBoardNameChange"
+    />
+    <label class="error-label">{{ boardDialog.error.name }}</label>
+    <template v-slot:footer>
+      <a-button class="btn-danger" type="danger" @click="handleDeleteBoard"
+        >Delete</a-button
+      >
+      <a-button key="back" @click="handleCancelEditBoard"> Cancel </a-button>
+      <a-button key="submit" type="primary" @click="handleOkEditBoard">
+        Confirm
+      </a-button>
+    </template>
+  </a-modal>
+  <a-modal
     title="Save & Exit"
     :visible="visibleSave"
     @ok="handleOk"
@@ -67,6 +99,7 @@
 
 <script>
 import PlusIcon from "../assets/PlusIcon.vue";
+import DotsIcon from "../assets/DotsIcon.vue";
 import UserIcon from "../assets/UserIcon.vue";
 import { store } from "../utils/Data.store";
 import { addMoreList } from "../utils/DrawCanvas";
@@ -77,15 +110,26 @@ export default {
       showNewList: false,
       visible: false,
       visibleSave: false,
+      visibleEditBoard: false,
       name: "",
       error: {
         name: "",
+      },
+      currentBoard: {},
+      boardDialog: {
+        editingBoard: {
+          name: "",
+        },
+        error: {
+          name: "",
+        },
       },
     };
   },
   components: {
     PlusIcon,
     UserIcon,
+    DotsIcon,
   },
   watch: {
     $route(to, from) {
@@ -107,6 +151,24 @@ export default {
     handleDirectHome() {
       this.$router.push("/");
     },
+    async handleOkEditBoard() {
+      const currentBoardIndex = store.kanbanBoards.findIndex(
+        (v) => v.id === store.currentBoardID
+      );
+      store.kanbanBoards[currentBoardIndex].name =
+        this.boardDialog.editingBoard.name;
+
+      this.currentBoard = store.kanbanBoards[currentBoardIndex];
+      this.handleCancelEditBoard();
+    },
+    async handleDeleteBoard() {
+      store.kanbanBoards = store.kanbanBoards.filter(
+        (v) => v.id !== this.currentBoard.id
+      );
+      await store.setToDB();
+      this.$router.push("/");
+      this.handleCancelEditBoard();
+    },
     handleOk() {
       if (!this.name) {
         return (this.error.name = !this.name ? "*required" : "");
@@ -120,8 +182,25 @@ export default {
       this.name = e.target.value;
       this.error.name = !this.name ? "*required" : "";
     },
+    handleBoardNameChange(e) {
+      this.boardDialog.editingBoard.name = e.target.value;
+      this.boardDialog.error.name = !this.boardDialog.editingBoard.name
+        ? "*required"
+        : "";
+    },
     handleCancelSave() {
       this.visibleSave = false;
+    },
+    handleCancelEditBoard() {
+      this.visibleEditBoard = false;
+      this.boardDialog = {
+        editingBoard: {
+          name: this.currentBoard.name,
+        },
+        error: {
+          name: "",
+        },
+      };
     },
     handleCancel() {
       this.name = "";
@@ -132,6 +211,12 @@ export default {
       if (this.$route.matched?.[0]?.path === "/board/:id") {
         this.showNewList = true;
         store.currentBoardID = this.$route?.params?.id;
+        this.currentBoard = store.kanbanBoards.find(
+          (v) => v.id === store.currentBoardID
+        );
+        this.boardDialog.editingBoard = {
+          name: this.currentBoard?.name,
+        };
       } else {
         this.showNewList = false;
       }
@@ -141,6 +226,27 @@ export default {
 </script>
 
 <style scoped>
+.icon-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-btn {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
 .title {
   display: inline;
   font-size: 32px;
@@ -170,6 +276,11 @@ export default {
   font-weight: 500;
   height: 46px;
   padding: 20px;
+}
+
+.btn-danger {
+  background: #ef180c;
+  color: white;
 }
 </style>
 

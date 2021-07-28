@@ -6,11 +6,15 @@
 <script>
 import Header from "./components/Header.vue";
 import Canvas from "./components/Canvas.vue";
+import { store } from "./utils/Data.store";
 
 export default {
   components: {
     Header,
     Canvas,
+  },
+  async mounted() {
+    await store.openDatabase();
   },
 };
 </script>

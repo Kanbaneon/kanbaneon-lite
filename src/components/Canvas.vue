@@ -207,7 +207,8 @@ export default {
         : "";
     },
   },
-  mounted() {
+  async mounted() {
+    await store.getFromDB();
     const currentList = store.kanbanBoards.find(
       (v) => v.id === store.currentBoardID
     );
