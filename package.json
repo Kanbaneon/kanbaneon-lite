@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "📌A canvas based Kanban board",
   "scripts": {
     "dev": "vite",
@@ -26,7 +26,13 @@
     "Canvas for rendering 2D Scrum Board"
   ],
   "badges": [],
-  "techStacks": [],
+  "techStacks": [
+    "Vue 3",
+    "Vite",
+    "Ant Design Vue",
+    "Konva",
+    "IndexedDB"
+  ],
   "screenshots": [],
   "name": "kanbaneon"
 }
