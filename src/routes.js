@@ -1,11 +1,22 @@
+import { defineAsyncComponent } from "vue";
 import * as VueRouter from "vue-router";
-import Canvas from "./components/Canvas.vue";
-import Home from "./components/Home.vue";
 
 const routes = [
-  { path: "/", component: Home, props: true },
+  {
+    path: "/",
+    component: defineAsyncComponent({
+      loader: () => import("./components/Home.vue"),
+    }),
+    props: true,
+  },
   { path: "/board", redirect: "/" },
-  { path: "/board/:id", component: Canvas, props: true },
+  {
+    path: "/board/:id",
+    component: defineAsyncComponent({
+      loader: () => import("./components/Canvas.vue"),
+    }),
+    props: true,
+  },
 ];
 
 export const router = VueRouter.createRouter({

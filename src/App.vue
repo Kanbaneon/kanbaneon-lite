@@ -4,14 +4,14 @@
 </template>
 
 <script>
-import Header from "./components/Header.vue";
-import Canvas from "./components/Canvas.vue";
 import { store } from "./utils/Data.store";
+import { defineAsyncComponent } from "vue";
 
 export default {
   components: {
-    Header,
-    Canvas,
+    Header: defineAsyncComponent({
+      loader: () => import("./components/Header.vue"),
+    }),
   },
   async mounted() {
     await store.openDatabase();
