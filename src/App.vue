@@ -5,13 +5,11 @@
 
 <script>
 import { store } from "./utils/Data.store";
-import { defineAsyncComponent } from "vue";
+import Header from "./components/Header.vue";
 
 export default {
   components: {
-    Header: defineAsyncComponent({
-      loader: () => import("./components/Header.vue"),
-    }),
+    Header,
   },
   async mounted() {
     await store.openDatabase();
