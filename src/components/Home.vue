@@ -87,8 +87,7 @@ export default {
     this.handleDataSync();
   },
   methods: {
-    async handleDataSync() {
-      await store.getFromDB();
+    handleDataSync() {
       this.boards = store.kanbanBoards;
     },
     handleDirect(id) {

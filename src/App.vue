@@ -15,6 +15,7 @@ export default {
   },
   async mounted() {
     await store.openDatabase();
+    await store.getFromDB();
   },
 };
 </script>
