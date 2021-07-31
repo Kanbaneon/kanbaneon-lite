@@ -1,9 +1,21 @@
 <template>
   <div class="container">
     <a-row v-if="boards?.length" :gutter="16">
+      <a-col :xs="24" :md="6" v-if="smallScreen" class="col">
+        <a-card class="add-new-btn-card" @click="visible = true">
+          <a-button
+            @click="visible = true"
+            class="add-new-btn"
+            type="primary"
+            size="large"
+            ><PlusIcon />New Board</a-button
+          >
+        </a-card>
+      </a-col>
       <a-col
         class="col"
-        :span="6"
+        :xs="24"
+        :md="6"
         v-for="board in boards"
         v-bind:key="board.id"
       >
@@ -15,7 +27,7 @@
           <KanbanImg />
         </a-card>
       </a-col>
-      <a-col :span="6">
+      <a-col :xs="24" :md="6" v-if="largeScreen" class="col">
         <a-card class="add-new-btn-card" @click="visible = true">
           <a-button
             @click="visible = true"
@@ -105,6 +117,8 @@ export default {
       boards: store.kanbanBoards,
       visible: false,
       mode: "template",
+      smallScreen: window.matchMedia("(max-width:456px)").matches,
+      largeScreen: window.matchMedia("(min-width:456px)").matches,
       name: "",
       error: {
         name: "",

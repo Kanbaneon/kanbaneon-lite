@@ -1,11 +1,11 @@
 <template>
   <a-card class="header">
-    <a-col :span="showNewList ? 17 : 21">
+    <a-col :span="showNewList ? [17] : [21]">
       <h2 class="title" @click="handleDirectHome">
         KAN<span class="subtitle">BANEON</span>
       </h2>
     </a-col>
-    <a-col :span="2" v-if="showNewList">
+    <a-col :span="2" v-if="showNewList && largeScreen">
       <a-button
         size="large"
         type="primary"
@@ -14,7 +14,7 @@
         ><PlusIcon /><span class="add-new-btn-text">NEW LIST</span></a-button
       >
     </a-col>
-    <a-col :span="2" v-if="showNewList">
+    <a-col :span="2" v-if="showNewList && largeScreen">
       <a-button
         style="width: 150px"
         size="large"
@@ -24,17 +24,17 @@
         ><span class="add-new-btn-text">SAVE</span></a-button
       >
     </a-col>
-    <a-col :span="1" class="icon-btn-wrapper">
+    <a-col :span="[21, 1]" class="icon-btn-wrapper">
       <div
         class="icon-btn"
         v-if="showNewList"
         shape="round"
-        @click="visibleEditBoard = true"
+        @click="largeScreen ? (visibleEditBoard = true) : (popupMenu = true)"
       >
         <DotsIcon />
       </div>
     </a-col>
-    <a-col :span="1"
+    <a-col :span="[24, 1]"
       ><div class="avatar" :size="64"><UserIcon /></div
     ></a-col>
   </a-card>
@@ -107,6 +107,8 @@ import { addMoreList } from "../utils/DrawCanvas";
 export default {
   data() {
     return {
+      smallScreen: window.matchMedia("(max-width:456px)").matches,
+      largeScreen: window.matchMedia("(min-width:456px)").matches,
       showNewList: false,
       visible: false,
       visibleSave: false,
@@ -258,6 +260,8 @@ export default {
 .avatar {
   background: #42b883;
   border-radius: 50%;
+  height: 60px;
+  width: 60px;
   display: flex;
   justify-content: center;
   align-items: center;

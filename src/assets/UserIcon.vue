@@ -17,8 +17,8 @@
 
 <style scoped>
 svg {
-  width: 50px;
-  height: 70px;
+  width: 40px;
+  height: 60px;
   stroke: white;
 }
 </style>
