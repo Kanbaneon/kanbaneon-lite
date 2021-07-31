@@ -63,10 +63,10 @@ export default function getTile({ largestChildren, height }) {
       card.moveToTop();
       relatedText.moveToTop();
       yCount = yCount + 190;
-
-      const { list: dndList } = searchIntersection(e.currentTarget);
-      __dnd.list = dndList;
     });
+
+    const { list: dndList } = searchIntersection(e.currentTarget);
+    __dnd.list = dndList;
   });
 
   tile.on("dragend", (e) => {

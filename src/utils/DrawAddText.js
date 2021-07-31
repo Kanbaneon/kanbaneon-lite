@@ -62,10 +62,10 @@ export default function getAddText() {
       card.moveToTop();
       relatedText.moveToTop();
       yCount = yCount + 190;
-
-      const { list: dndList } = searchIntersection(e.currentTarget);
-      __dnd.list = dndList;
     });
+    
+    const { list: dndList } = searchIntersection(e.currentTarget);
+    __dnd.list = dndList;
   });
 
   text.on("dragend", (e) => {
