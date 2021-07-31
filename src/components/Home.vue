@@ -51,6 +51,20 @@
       @change="handleNameChange"
     />
     <label class="error-label">{{ error.name }}</label>
+
+    <a-radio-group
+      class="radio-wrapper"
+      v-model="mode"
+      default-value="template"
+      @change="handleModeChange"
+    >
+      <a-radio class="radio-wrapper" value="empty">
+        Create empty board
+      </a-radio>
+      <a-radio class="radio-wrapper" value="template">
+        Create with a template
+      </a-radio>
+    </a-radio-group>
     <template v-slot:footer>
       <a-button key="back" @click="handleCancelDialog"> Cancel </a-button>
       <a-button key="submit" type="primary" @click="handleAddNewBoard">
@@ -67,11 +81,30 @@ import KanbanImg from "../assets/KanbanImg.vue";
 import GetStartedImg from "../assets/GetStartedImg.vue";
 import * as uuid from "uuid";
 
+const getTemplateList = () => [
+  {
+    id: uuid.v4(),
+    name: "To-Do",
+    children: [],
+  },
+  {
+    id: uuid.v4(),
+    name: "Doing",
+    children: [],
+  },
+  {
+    id: uuid.v4(),
+    name: "Done",
+    children: [],
+  },
+];
+
 export default {
   data() {
     return {
       boards: store.kanbanBoards,
       visible: false,
+      mode: "template",
       name: "",
       error: {
         name: "",
@@ -90,6 +123,9 @@ export default {
     handleDataSync() {
       this.boards = store.kanbanBoards;
     },
+    handleModeChange(e) {
+      this.mode = e.target.value;
+    },
     handleDirect(id) {
       this.$router.push(`/board/${id}`);
     },
@@ -102,23 +138,42 @@ export default {
       this.visible = false;
       this.error.name = "";
     },
-    handleAddNewBoard() {
-      const newBoard = {
-        id: uuid.v4(),
-        name: this.name,
-        kanbanList: [],
-      };
-      this.boards.push(newBoard);
+    async handleAddNewBoard() {
+      if (!this.name) {
+        return (this.error.name = !this.name ? "*required" : "");
+      }
+
+      if (this.mode === "template") {
+        const newBoard = {
+          id: uuid.v4(),
+          name: this.name,
+          kanbanList: getTemplateList(),
+        };
+        this.boards.push(newBoard);
+      } else {
+        const newBoard = {
+          id: uuid.v4(),
+          name: this.name,
+          kanbanList: [],
+        };
+        this.boards.push(newBoard);
+      }
+
       this.handleCancelDialog();
 
       store.kanbanBoards = JSON.parse(JSON.stringify(this.boards));
-      store.setToDB();
+      await store.setToDB();
     },
   },
 };
 </script>
 
 <style scoped>
+.radio-wrapper {
+  display: block;
+  margin-top: 10px;
+}
+
 .col {
   padding-bottom: 16px;
 }
