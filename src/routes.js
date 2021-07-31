@@ -1,5 +1,6 @@
 import { defineAsyncComponent } from "vue";
 import * as VueRouter from "vue-router";
+import { store } from "./utils/Data.store";
 
 const routes = [
   {
@@ -22,4 +23,8 @@ const routes = [
 export const router = VueRouter.createRouter({
   history: VueRouter.createWebHistory(),
   routes,
+});
+
+router.beforeEach(async () => {
+  await store.getFromDB();
 });

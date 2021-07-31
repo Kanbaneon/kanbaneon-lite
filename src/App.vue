@@ -19,6 +19,10 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: #42b883 !important;
+}
+
 .ant-card-body {
   padding: 8px;
   display: flex;
