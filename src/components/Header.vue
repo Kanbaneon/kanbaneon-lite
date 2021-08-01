@@ -1,11 +1,11 @@
 <template>
   <a-card class="header">
-    <a-col :span="showNewList ? [17] : [21]">
+    <a-col :xl="showNewList ? 17 : 21" :md="showNewList ? 14 : 18">
       <h2 class="title" @click="handleDirectHome">
         KAN<span class="subtitle">BANEON</span>
       </h2>
     </a-col>
-    <a-col :span="2" v-if="showNewList && largeScreen">
+    <a-col :xl="2" :md="4" v-if="showNewList && largeScreen">
       <a-button
         size="large"
         type="primary"
@@ -14,7 +14,7 @@
         ><PlusIcon /><span class="add-new-btn-text">NEW LIST</span></a-button
       >
     </a-col>
-    <a-col :span="2" v-if="showNewList && largeScreen">
+    <a-col :xl="2" :md="4" v-if="showNewList && largeScreen">
       <a-button
         style="width: 150px"
         size="large"
