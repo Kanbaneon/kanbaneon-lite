@@ -1,7 +1,7 @@
 <template>
   <Header v-if="largeScreen" />
   <router-view v-if="largeScreen" />
-  <MobileMessage v-if="smallScreen" />
+  <MobileMessage v-if="!largeScreen" />
 </template>
 
 <script>
@@ -12,7 +12,6 @@ import MobileMessage from "./components/MobileMessage.vue";
 export default {
   data() {
     return {
-      smallScreen: window.matchMedia("(max-width:1024px)").matches,
       largeScreen: window.matchMedia("(min-width:1024px)").matches,
     };
   },
