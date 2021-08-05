@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <MobileAlert />
-    <h1>Kanbaneon cannot be used on Mobile Devices.</h1>
+    <h1>Kanbaneon cannot be used on the screen of this device.</h1>
     <h5>Please open it on PC browser.</h5>
   </div>
 </template>

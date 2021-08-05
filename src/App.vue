@@ -13,15 +13,31 @@ export default {
   data() {
     return {
       largeScreen: window.matchMedia("(min-width:1024px)").matches,
+      resizeListener: null,
     };
   },
   components: {
     Header,
     MobileMessage,
   },
+  methods: {
+    handleListenScreen() {
+      this.resizeListener = window.addEventListener("resize", () => {
+        this.largeScreen = window.matchMedia("(min-width:1024px)").matches;
+      });
+    },
+    handleUnlistenScreen() {
+      window.removeEventListener(this.resizeListener);
+      this.resizeListener = null;
+    },
+  },
   async mounted() {
+    this.handleListenScreen();
     await store.openDatabase();
     await store.getFromDB();
+  },
+  beforeUnmount() {
+    this.handleUnlistenScreen();
   },
 };
 </script>
