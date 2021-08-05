@@ -94,7 +94,10 @@ export function editCard(editingCard) {
 export function initCanvas() {
   __vue.instance = this;
 
-  const width = 1440 - 20;
+  const width =
+    (window.matchMedia("(min-width:1440px)").matches
+      ? window.innerWidth
+      : 1600) - 20;
   const height = window.innerHeight - 115;
 
   const largestList = kanbanList()?.length;
