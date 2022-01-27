@@ -216,6 +216,10 @@ export default {
       this.$router.push("/");
     }
     this.drawFns().initCanvas();
+
+    setInterval(() => {
+      store.setToDB();
+    }, 5000);
   },
 };
 </script>

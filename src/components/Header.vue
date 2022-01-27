@@ -10,13 +10,6 @@
       </h2>
     </a-col>
     <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen">
-      <a-button
-        size="large"
-        type="primary"
-        class="add-new-btn"
-        @click="openModal()"
-        ><PlusIcon /><span class="add-new-btn-text">NEW LIST</span></a-button
-      >
     </a-col>
     <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen">
       <a-button

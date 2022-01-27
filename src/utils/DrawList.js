@@ -78,7 +78,7 @@ export function initList() {
 
   const addMoreText = standardText.clone();
   addMoreText.draggable(false);
-  addMoreText.text(`Click here or "NEW LIST" button to add more list`);
+  addMoreText.text(`Click here to add more list`);
   addMoreText.x(xCount + 10);
   addMoreText.fontSize(15);
   addMoreText.fill("white");
