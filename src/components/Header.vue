@@ -28,7 +28,7 @@
         ><span class="add-new-btn-text">SAVE</span></a-button
       >
     </a-col>
-    <a-col :span="[21, 1]" class="icon-btn-wrapper">
+    <a-col :span="1" class="icon-btn-wrapper">
       <div
         class="icon-btn"
         v-if="showNewList"
@@ -38,7 +38,7 @@
         <DotsIcon />
       </div>
     </a-col>
-    <a-col :span="[24, 1]"
+    <a-col :span="1"
       ><div class="avatar" :size="64"><UserIcon /></div
     ></a-col>
   </a-card>
@@ -113,7 +113,7 @@ export default {
     return {
       smallScreen: window.matchMedia("(max-width:456px)").matches,
       largeScreen: window.matchMedia("(min-width:456px)").matches,
-      showNewList: false,
+      showNewList: this.$route.matched?.[0]?.path === "/board/:id",
       visible: false,
       visibleSave: false,
       visibleEditBoard: false,

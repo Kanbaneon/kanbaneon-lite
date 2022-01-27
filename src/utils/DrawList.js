@@ -8,7 +8,7 @@ export function initList() {
   const height = window.innerHeight;
 
   const largestChildren =
-    !!kanbanList?.length &&
+    !!kanbanList()?.length &&
     Math.max(...kanbanList().map((v) => v.children?.length));
   const standardRect = this.drawFns().getTile({ largestChildren, height });
 

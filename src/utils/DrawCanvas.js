@@ -29,7 +29,7 @@ export function addMoreCard(newCard) {
     id: uuid.v4(),
     text: newCard?.text,
   });
-  this.drawFns().initList();
+  this.drawFns().initCanvas();
 }
 
 export function addMoreList(newList) {
@@ -97,8 +97,8 @@ export function initCanvas() {
   const width =
     (window.matchMedia("(min-width:1440px)").matches
       ? window.innerWidth
-      : 1600) - 20;
-  const height = window.innerHeight - 115;
+      : 1600) + 20;
+  const height = window.innerHeight + 20;
 
   const largestList = kanbanList()?.length;
   const largestChildren =
