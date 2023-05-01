@@ -1,11 +1,10 @@
 <template>
-  <Header v-if="largeScreen" />
+  <Header v-if="$store.state.user.isLoggedIn && largeScreen" />
   <router-view v-if="largeScreen" />
   <MobileMessage v-if="!largeScreen" />
 </template>
 
 <script>
-import { store } from "./utils/Data.store";
 import Header from "./components/Header.vue";
 import MobileMessage from "./components/MobileMessage.vue";
 
@@ -31,10 +30,13 @@ export default {
       this.resizeListener = null;
     },
   },
+  watch: {
+    "$store.state.user"() {
+      return this.$store.state.user;
+    },
+  },
   async mounted() {
     this.handleListenScreen();
-    await store.openDatabase();
-    await store.getFromDB();
   },
   beforeUnmount() {
     this.handleUnlistenScreen();

@@ -1,6 +1,6 @@
 import Konva from "konva";
 import * as uuid from "uuid";
-import { store } from "./Data.store";
+import { store } from "../store";
 
 const kanbanList = () =>
   store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
@@ -105,7 +105,7 @@ export function initCanvas() {
     !!largestList && Math.max(...kanbanList().map((v) => v.children?.length));
 
   __konva.stage = new Konva.Stage({
-    container: "canban-canvas",
+    container: "kanbaneon-canvas",
     width: largestList > 4 ? width + (largestList - 4) * 295 : width,
     height: largestChildren > 3 ? height + (largestChildren - 3) * 180 : height,
     x: 0,

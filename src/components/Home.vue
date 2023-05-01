@@ -1,13 +1,9 @@
 <template>
   <div class="container">
-    <a-row v-if="boards?.length" :gutter="16">
+    <a-row v-if="$store.state.user.isLoggedIn && boards?.length" :gutter="16">
       <a-col :xs="24" :md="6" v-if="smallScreen" class="col">
         <a-card class="add-new-btn-card" @click="visible = true">
-          <a-button
-            @click="visible = true"
-            class="add-new-btn"
-            type="primary"
-            size="large"
+          <a-button @click="visible = true" type="primary" size="large"
             ><PlusIcon />New Board</a-button
           >
         </a-card>
@@ -39,7 +35,7 @@
         </a-card>
       </a-col>
     </a-row>
-    <div v-if="!boards?.length" class="wrapper">
+    <div v-if="$store.state.user.isLoggedIn && !boards?.length" class="wrapper">
       <GetStartedImg />
       <a-button
         @click="visible = true"
@@ -87,7 +83,6 @@
 </template>
 
 <script>
-import { store } from "../utils/Data.store";
 import PlusIcon from "../assets/PlusIcon.vue";
 import KanbanImg from "../assets/KanbanImg.vue";
 import GetStartedImg from "../assets/GetStartedImg.vue";
@@ -114,7 +109,7 @@ const getTemplateList = () => [
 export default {
   data() {
     return {
-      boards: store.kanbanBoards,
+      boards: [],
       visible: false,
       mode: "template",
       smallScreen: window.matchMedia("(max-width:456px)").matches,
@@ -125,18 +120,20 @@ export default {
       },
     };
   },
+  watch: {
+    "$store.state.kanbanBoards": async function () {
+      this.boards = await this.$store.getters.getCurrentBoards();
+    },
+  },
   components: {
     KanbanImg,
     GetStartedImg,
     PlusIcon,
   },
-  mounted() {
-    this.handleDataSync();
+  async mounted() {
+    this.boards = await this.$store.getters.getCurrentBoards();
   },
   methods: {
-    handleDataSync() {
-      this.boards = store.kanbanBoards;
-    },
     handleModeChange(e) {
       this.mode = e.target.value;
     },
@@ -157,26 +154,14 @@ export default {
         return (this.error.name = !this.name ? "*required" : "");
       }
 
-      if (this.mode === "template") {
-        const newBoard = {
-          id: uuid.v4(),
-          name: this.name,
-          kanbanList: getTemplateList(),
-        };
-        this.boards.push(newBoard);
-      } else {
-        const newBoard = {
-          id: uuid.v4(),
-          name: this.name,
-          kanbanList: [],
-        };
-        this.boards.push(newBoard);
-      }
+      const newBoard = {
+        id: uuid.v4(),
+        name: this.name,
+        kanbanList: this.mode === "template" ? getTemplateList() : [],
+      };
 
+      this.$store.commit("addKanbanBoard", newBoard);
       this.handleCancelDialog();
-
-      store.kanbanBoards = JSON.parse(JSON.stringify(this.boards));
-      await store.setToDB();
     },
   },
 };

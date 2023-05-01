@@ -1,6 +1,6 @@
 <template>
   <div class="canvas-wrapper">
-    <div id="canban-canvas"></div>
+    <div id="kanbaneon-canvas"></div>
   </div>
   <a-modal
     title="Enter the message of new item"
@@ -88,7 +88,6 @@ import getAddText from "../utils/DrawAddText";
 import getCard from "../utils/DrawCard";
 import getTile from "../utils/DrawTile";
 import getText from "../utils/DrawText";
-import { store } from "../utils/Data.store";
 
 export default {
   data() {
@@ -208,9 +207,8 @@ export default {
     },
   },
   async mounted() {
-    await store.getFromDB();
-    const currentList = store.kanbanBoards.find(
-      (v) => v.id === store.currentBoardID
+    const currentList = this.$store.state.kanbanBoards.find(
+      (v) => v.id === this.$store.state.currentBoardID
     );
     if (!currentList) {
       this.$router.push("/");
@@ -218,7 +216,6 @@ export default {
     this.drawFns().initCanvas();
 
     setInterval(() => {
-      store.setToDB();
     }, 5000);
   },
 };

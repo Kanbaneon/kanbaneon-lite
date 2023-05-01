@@ -9,8 +9,7 @@
         KAN<span class="subtitle">BANEON</span>
       </h2>
     </a-col>
-    <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen">
-    </a-col>
+    <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen"> </a-col>
     <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen">
       <a-button
         style="width: 150px"
@@ -31,9 +30,14 @@
         <DotsIcon />
       </div>
     </a-col>
-    <a-col :span="1"
-      ><div class="avatar" :size="64"><UserIcon /></div
-    ></a-col>
+    <a-col :span="1" v-if="$store.state.user.isLoggedIn">
+      <a-popover :title="$store.state.user.username" trigger="click">
+        <template #content>
+          <p><a-button block @click="logout">Logout</a-button></p>
+        </template>
+        <div class="avatar" :size="64"><UserIcon /></div>
+      </a-popover>
+    </a-col>
   </a-card>
   <a-modal
     title="Enter the name of new list"
@@ -98,7 +102,6 @@
 import PlusIcon from "../assets/PlusIcon.vue";
 import DotsIcon from "../assets/DotsIcon.vue";
 import UserIcon from "../assets/UserIcon.vue";
-import { store } from "../utils/Data.store";
 import { addMoreList } from "../utils/DrawCanvas";
 
 export default {
@@ -142,8 +145,14 @@ export default {
     openModal() {
       this.visible = true;
     },
+    async logout() {
+      this.$store.commit("setUser", {
+        isLoggedIn: false,
+        username: "",
+      });
+      this.$router.push("/login");
+    },
     async handleSaveData() {
-      await store.setToDB();
       this.visibleSave = false;
       this.$router.push("/");
     },
@@ -151,20 +160,16 @@ export default {
       this.$router.push("/");
     },
     async handleOkEditBoard() {
-      const currentBoardIndex = store.kanbanBoards.findIndex(
-        (v) => v.id === store.currentBoardID
+      const currentBoardIndex = this.$store.state.kanbanBoards.findIndex(
+        (v) => v.id === this.$store.state.currentBoardID
       );
-      store.kanbanBoards[currentBoardIndex].name =
+      this.$store.state.kanbanBoards[currentBoardIndex].name =
         this.boardDialog.editingBoard.name;
 
-      this.currentBoard = store.kanbanBoards[currentBoardIndex];
+      this.currentBoard = this.$store.state.kanbanBoards[currentBoardIndex];
       this.handleCancelEditBoard();
     },
     async handleDeleteBoard() {
-      store.kanbanBoards = store.kanbanBoards.filter(
-        (v) => v.id !== this.currentBoard.id
-      );
-      await store.setToDB();
       this.$router.push("/");
       this.handleCancelEditBoard();
     },
@@ -209,9 +214,9 @@ export default {
     handleCheckRoute() {
       if (this.$route.matched?.[0]?.path === "/board/:id") {
         this.showNewList = true;
-        store.currentBoardID = this.$route?.params?.id;
-        this.currentBoard = store.kanbanBoards.find(
-          (v) => v.id === store.currentBoardID
+        this.$store.state.currentBoardID = this.$route?.params?.id;
+        this.currentBoard = this.$store.state.kanbanBoards.find(
+          (v) => v.id === this.$store.state.currentBoardID
         );
         this.boardDialog.editingBoard = {
           name: this.currentBoard?.name,
@@ -262,6 +267,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .subtitle {
