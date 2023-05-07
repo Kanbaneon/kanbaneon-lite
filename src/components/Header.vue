@@ -134,8 +134,8 @@ export default {
     DotsIcon,
   },
   watch: {
-    $route(to, from) {
-      this.handleCheckRoute();
+    async $route(to, from) {
+      await this.handleCheckRoute();
     },
   },
   methods: {
@@ -211,11 +211,11 @@ export default {
       this.error.name = "";
       this.visible = false;
     },
-    handleCheckRoute() {
+    async handleCheckRoute() {
       if (this.$route.matched?.[0]?.path === "/board/:id") {
         this.showNewList = true;
-        this.$store.state.currentBoardID = this.$route?.params?.id;
-        this.currentBoard = this.$store.state.kanbanBoards.find(
+        this.$store.commit("setCurrentBoardID", this.$route?.params?.id);
+        this.currentBoard = (this.$store.getters.currentBoards ?? []).find(
           (v) => v.id === this.$store.state.currentBoardID
         );
         this.boardDialog.editingBoard = {

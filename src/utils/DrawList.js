@@ -1,8 +1,9 @@
 import { __konva } from "./DrawCanvas";
-import { store } from "./Data.store";
+import { store } from "../store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
+  store.getters.currentBoards.find((v) => v.id === store.getters.currentBoardID)
+    ?.kanbanList;
 
 export function initList() {
   const height = window.innerHeight;

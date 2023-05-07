@@ -87,6 +87,7 @@ import PlusIcon from "../assets/PlusIcon.vue";
 import KanbanImg from "../assets/KanbanImg.vue";
 import GetStartedImg from "../assets/GetStartedImg.vue";
 import * as uuid from "uuid";
+import { onBeforeUpdate, onMounted } from "vue";
 
 const getTemplateList = () => [
   {
@@ -121,8 +122,8 @@ export default {
     };
   },
   watch: {
-    "$store.state.kanbanBoards": async function () {
-      this.boards = await this.$store.getters.getCurrentBoards();
+    "$store.state.kanbanBoards": function () {
+      this.boards = this.$store.getters.currentBoards;
     },
   },
   components: {
@@ -130,8 +131,8 @@ export default {
     GetStartedImg,
     PlusIcon,
   },
-  async mounted() {
-    this.boards = await this.$store.getters.getCurrentBoards();
+  mounted() {
+    this.boards = this.$store.getters.currentBoards;
   },
   methods: {
     handleModeChange(e) {

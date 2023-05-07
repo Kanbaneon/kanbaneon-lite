@@ -34,20 +34,20 @@ export const store = createStore({
     user(state) {
       return JSON.parse(JSON.stringify(state.user));
     },
-    getCurrentBoards: (state) => async () => {
-      const userId = await getExistingUser(state.user.username);
+    currentBoards(state) {
+      const userId = state.user.id ?? "";
       return JSON.parse(JSON.stringify(state.kanbanBoards?.[userId] ?? []));
     },
   },
   mutations: {
-    async addKanbanBoard(state, board) {
+    addKanbanBoard(state, board) {
       const allBoards = JSON.parse(JSON.stringify(state.kanbanBoards ?? {}));
-      const existingUser = await getExistingUser(state.user.username);
-      const currentBoards = allBoards[existingUser] ?? [];
+      const userId = state.user.id;
+      const currentBoards = allBoards[userId] ?? [];
       currentBoards.push(board);
       this.commit("setKanbanBoards", {
         ...allBoards,
-        [existingUser]: currentBoards,
+        [userId]: currentBoards,
       });
     },
     async setKanbanBoards(state, boards) {
@@ -72,15 +72,18 @@ export const store = createStore({
           [user.username]: v4(),
         });
       }
-
-      await browserDB.put(INDEXED_DB.objectStores.KANBANEON, "user", user);
+      if (user?.isLoggedIn && user?.username) {
+        await setUpBoards();
+      }
+      await browserDB.put(INDEXED_DB.objectStores.KANBANEON, "user", {
+        ...user,
+        id: existingUser ?? undefined,
+      });
     },
   },
 });
 
-export async function setUpDB() {
-  await browserDB.openDatabase();
-
+async function setUpCurrentBoardID() {
   const currentBoardID = await browserDB.get(
     INDEXED_DB.objectStores.KANBANEON,
     "currentBoardID",
@@ -91,7 +94,9 @@ export async function setUpDB() {
   } else {
     store.commit("setCurrentBoardID", initialState.currentBoardID);
   }
+}
 
+async function setUpUser() {
   const user = await browserDB.get(
     INDEXED_DB.objectStores.KANBANEON,
     "user",
@@ -102,12 +107,23 @@ export async function setUpDB() {
   } else {
     store.commit("setUser", initialState.user);
   }
+  return user;
+}
 
+async function setUpBoards() {
+  const kanbanBoards = await browserDB.get(
+    INDEXED_DB.objectStores.KANBANEON,
+    "kanbanBoards"
+  );
+  store.commit("setKanbanBoards", kanbanBoards);
+}
+
+export async function setUpDB() {
+  await browserDB.openDatabase();
+
+  await setUpCurrentBoardID();
+  const user = await setUpUser();
   if (user?.isLoggedIn && user?.username) {
-    const kanbanBoards = await browserDB.get(
-      INDEXED_DB.objectStores.KANBANEON,
-      "kanbanBoards"
-    );
-    store.commit("setKanbanBoards", kanbanBoards);
+    await setUpBoards();
   }
 }

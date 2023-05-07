@@ -1,5 +1,5 @@
 import { __dnd, __konva } from "./DrawCanvas";
-import { store } from "./Data.store";
+import { store } from "../store";
 
 const kanbanList = () =>
   store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;

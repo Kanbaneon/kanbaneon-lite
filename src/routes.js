@@ -37,6 +37,10 @@ const routes = [
     }),
     props: true,
   },
+  {
+    path: "/:pathMatch(.*)*",
+    component: () => import("./components/NotFound.vue"),
+  },
 ];
 
 export const router = VueRouter.createRouter({

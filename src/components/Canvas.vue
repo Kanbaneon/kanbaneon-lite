@@ -207,7 +207,7 @@ export default {
     },
   },
   async mounted() {
-    const currentList = this.$store.state.kanbanBoards.find(
+    const currentList = this.$store.getters.currentBoards.find(
       (v) => v.id === this.$store.state.currentBoardID
     );
     if (!currentList) {
@@ -215,8 +215,7 @@ export default {
     }
     this.drawFns().initCanvas();
 
-    setInterval(() => {
-    }, 5000);
+    setInterval(() => {}, 5000);
   },
 };
 </script>

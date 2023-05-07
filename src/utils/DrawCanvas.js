@@ -3,7 +3,8 @@ import * as uuid from "uuid";
 import { store } from "../store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
+  store.getters.currentBoards.find((v) => v.id === store.getters.currentBoardID)
+    ?.kanbanList;
 
 const __vue = {
   instance: null,

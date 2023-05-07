@@ -1,10 +1,11 @@
 import Konva from "konva";
 import { __dnd, __konva } from "./DrawCanvas";
 import { searchIntersection } from "./DrawListItem";
-import { store } from "./Data.store";
+import { store } from "../store";
 
 const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
+  store.getters.currentBoards.find((v) => v.id === store.getters.currentBoardID)
+    ?.kanbanList;
 
 export default function getTile({ largestChildren, height }) {
   const tile = new Konva.Rect({
