@@ -149,6 +149,7 @@ export default {
       this.$store.commit("setUser", {
         isLoggedIn: false,
         username: "",
+        id: undefined,
       });
       this.$router.push("/login");
     },

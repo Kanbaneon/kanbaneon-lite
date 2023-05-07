@@ -125,6 +125,9 @@ export default {
     "$store.state.user": function () {
       this.boards = this.$store.getters.currentBoards;
     },
+    "$store.state.kanbanBoards": function () {
+      this.boards = this.$store.getters.currentBoards;
+    },
   },
   components: {
     KanbanImg,

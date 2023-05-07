@@ -66,18 +66,11 @@ export const store = createStore({
     },
     async setUser(state, user) {
       state.user = user;
-      const existingUser = await getExistingUser(user.username);
-      if (!existingUser && user.username) {
-        await browserDB.put(INDEXED_DB.objectStores.KANBANEON, "users", {
-          [user.username]: v4(),
-        });
-      }
       if (user?.isLoggedIn && user?.username) {
         await setUpBoards();
       }
       await browserDB.put(INDEXED_DB.objectStores.KANBANEON, "user", {
-        ...user,
-        id: existingUser ?? undefined,
+        ...user
       });
     },
   },

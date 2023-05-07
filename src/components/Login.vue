@@ -28,6 +28,8 @@
 </template>
 
 <script lang="ts">
+import { v4 } from "uuid";
+import { INDEXED_DB, browserDB } from "../helpers/IndexedDbHelper";
 import { getExistingUser } from "../store";
 
 export default {
@@ -43,7 +45,14 @@ export default {
   methods: {
     async login(e) {
       e.preventDefault();
-      const userId = await getExistingUser(this.username);
+      let userId = await getExistingUser(this.username);
+      if (!userId) {
+        userId = v4();
+        await browserDB.put(INDEXED_DB.objectStores.KANBANEON, "users", {
+          [this.username]: userId,
+        });
+      }
+
       this.$store.commit("setUser", {
         username: this.username,
         isLoggedIn: true,
