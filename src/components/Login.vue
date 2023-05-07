@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { store } from "../store";
+import { getExistingUser } from "../store";
 
 export default {
   data: () => {
@@ -41,9 +41,14 @@ export default {
     };
   },
   methods: {
-    login(e) {
+    async login(e) {
       e.preventDefault();
-      store.commit("setUser", { username: this.username, isLoggedIn: true });
+      const userId = await getExistingUser(this.username);
+      this.$store.commit("setUser", {
+        username: this.username,
+        isLoggedIn: true,
+        id: userId,
+      });
       this.$router.push("/");
     },
   },

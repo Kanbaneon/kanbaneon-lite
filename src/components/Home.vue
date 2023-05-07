@@ -122,7 +122,7 @@ export default {
     };
   },
   watch: {
-    "$store.state.kanbanBoards": function () {
+    "$store.state.user": function () {
       this.boards = this.$store.getters.currentBoards;
     },
   },
