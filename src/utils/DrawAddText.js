@@ -1,10 +1,6 @@
 import Konva from "konva";
 import { __dnd, __konva } from "./DrawCanvas";
 import { searchIntersection } from "./DrawListItem";
-import { store } from "../store";
-
-const kanbanList = () =>
-  store.kanbanBoards.find((v) => v.id === store.currentBoardID)?.kanbanList;
 
 export default function getAddText() {
   const text = new Konva.Text({
@@ -72,18 +68,18 @@ export default function getAddText() {
     const list = e?.currentTarget?.attrs?.listDetails;
     const dragOverList = __dnd.list;
     if (!!dragOverList) {
-      const currentList = kanbanList().find((data) => data?.id === list?.id);
-      const currentListIndex = kanbanList().findIndex(
+      const currentList = this.$store.getters.kanbanList.find((data) => data?.id === list?.id);
+      const currentListIndex = this.$store.getters.kanbanList.findIndex(
         (data) => data?.id === list?.id
       );
-      const foundListIndex = kanbanList().findIndex(
+      const foundListIndex = this.$store.getters.kanbanList.findIndex(
         (item) =>
           item?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
       );
 
       if (currentListIndex > -1 && foundListIndex > -1) {
-        kanbanList().splice(currentListIndex, 1);
-        kanbanList().splice(foundListIndex, 0, currentList);
+        this.$store.getters.kanbanList.splice(currentListIndex, 1);
+        this.$store.getters.kanbanList.splice(foundListIndex, 0, currentList);
       }
     }
     this.drawFns().initCanvas();

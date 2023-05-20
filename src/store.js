@@ -25,6 +25,14 @@ export const store = createStore({
     return initialState;
   },
   getters: {
+    kanbanList(_, getters) {
+      return JSON.parse(
+        JSON.stringify(
+          getters.currentBoards.find((v) => v.id === getters.currentBoardID)
+            ?.kanbanList ?? []
+        )
+      );
+    },
     async kanbanBoards(state) {
       return JSON.parse(JSON.stringify(state.kanbanBoards));
     },
@@ -40,6 +48,19 @@ export const store = createStore({
     },
   },
   mutations: {
+    addKanbanList(state, list) {
+      const allBoards = JSON.parse(JSON.stringify(state.kanbanBoards ?? {}));
+      const userId = state.user.id;
+      const currentBoards = allBoards[userId] ?? [];
+      const currentBoardIndex = currentBoards.findIndex(
+        (v) => v.id === state.currentBoardID
+      );
+      currentBoards[currentBoardIndex].kanbanList.push(list);
+      this.commit("setKanbanBoards", {
+        ...allBoards,
+        [userId]: currentBoards,
+      });
+    },
     addKanbanBoard(state, board) {
       const allBoards = JSON.parse(JSON.stringify(state.kanbanBoards ?? {}));
       const userId = state.user.id;
@@ -70,7 +91,7 @@ export const store = createStore({
         await setUpBoards();
       }
       await browserDB.put(INDEXED_DB.objectStores.KANBANEON, "user", {
-        ...user
+        ...user,
       });
     },
   },

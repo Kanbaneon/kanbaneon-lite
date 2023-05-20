@@ -1,10 +1,5 @@
 import Konva from "konva";
 import * as uuid from "uuid";
-import { store } from "../store";
-
-const kanbanList = () =>
-  store.getters.currentBoards.find((v) => v.id === store.getters.currentBoardID)
-    ?.kanbanList;
 
 const __vue = {
   instance: null,
@@ -21,7 +16,9 @@ export const __dnd = {
 };
 
 export function addMoreCard(newCard) {
-  const foundList = kanbanList().find((v) => v.id === newCard.listId);
+  const foundList = this.$store.getters.kanbanList.find(
+    (v) => v.id === newCard.listId
+  );
   if (!Array.isArray(foundList?.children)) {
     return;
   }
@@ -30,33 +27,36 @@ export function addMoreCard(newCard) {
     id: uuid.v4(),
     text: newCard?.text,
   });
+  this.$store.commit("setKanbanBoards", newCard.listId);
   this.drawFns().initCanvas();
 }
 
 export function addMoreList(newList) {
-  kanbanList().push({
+  const addingList = {
     id: uuid.v4(),
     name: newList?.name,
     children: [],
-  });
-
+  };
+  this.$store.commit("addKanbanList", addingList);
   __vue.instance.drawFns().initCanvas();
 }
 
 export function deleteList(deletingList) {
-  const foundListIndex = kanbanList().findIndex(
+  const foundListIndex = this.$store.getters.kanbanList.findIndex(
     (v) => v.id === deletingList.listId
   );
   if (foundListIndex <= -1) {
     return;
   }
 
-  kanbanList().splice(foundListIndex, 1);
+  this.$store.getters.kanbanList.splice(foundListIndex, 1);
   this.drawFns().initList();
 }
 
 export function editList(editingList) {
-  const foundList = kanbanList().find((v) => v.id === editingList.listId);
+  const foundList = this.$store.getters.kanbanList.find(
+    (v) => v.id === editingList.listId
+  );
   if (!foundList?.id) {
     return;
   }
@@ -66,7 +66,9 @@ export function editList(editingList) {
 }
 
 export function deleteCard(deletingCard) {
-  const foundList = kanbanList().find((v) => v.id === deletingCard.listId);
+  const foundList = this.$store.getters.kanbanList.find(
+    (v) => v.id === deletingCard.listId
+  );
   if (!Array.isArray(foundList?.children)) {
     return;
   }
@@ -78,7 +80,9 @@ export function deleteCard(deletingCard) {
 }
 
 export function editCard(editingCard) {
-  const foundList = kanbanList().find((v) => v.id === editingCard.listId);
+  const foundList = this.$store.getters.kanbanList.find(
+    (v) => v.id === editingCard.listId
+  );
   if (!Array.isArray(foundList?.children)) {
     return;
   }
@@ -101,9 +105,10 @@ export function initCanvas() {
       : 1600) + 20;
   const height = window.innerHeight + 20;
 
-  const largestList = kanbanList()?.length;
+  const largestList = this.$store.getters.kanbanList?.length;
   const largestChildren =
-    !!largestList && Math.max(...kanbanList().map((v) => v.children?.length));
+    !!largestList &&
+    Math.max(...this.$store.getters.kanbanList.map((v) => v.children?.length));
 
   __konva.stage = new Konva.Stage({
     container: "kanbaneon-canvas",

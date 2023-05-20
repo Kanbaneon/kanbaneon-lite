@@ -3,10 +3,6 @@ import { __dnd, __konva } from "./DrawCanvas";
 import { searchIntersection } from "./DrawListItem";
 import { store } from "../store";
 
-const kanbanList = () =>
-  store.getters.currentBoards.find((v) => v.id === store.getters.currentBoardID)
-    ?.kanbanList;
-
 export default function getTile({ largestChildren, height }) {
   const tile = new Konva.Rect({
     y: 10,
@@ -74,18 +70,18 @@ export default function getTile({ largestChildren, height }) {
     const list = e?.currentTarget?.attrs?.listDetails;
     const dragOverList = __dnd.list;
     if (!!dragOverList) {
-      const currentList = kanbanList().find((data) => data?.id === list?.id);
-      const currentListIndex = kanbanList().findIndex(
+      const currentList = store.getters.kanbanList.find((data) => data?.id === list?.id);
+      const currentListIndex = store.getters.kanbanList.findIndex(
         (data) => data?.id === list?.id
       );
-      const foundListIndex = kanbanList().findIndex(
+      const foundListIndex = store.getters.kanbanList.findIndex(
         (item) =>
           item?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
       );
 
       if (currentListIndex > -1 && foundListIndex > -1) {
-        kanbanList().splice(currentListIndex, 1);
-        kanbanList().splice(foundListIndex, 0, currentList);
+        store.getters.kanbanList.splice(currentListIndex, 1);
+        store.getters.kanbanList.splice(foundListIndex, 0, currentList);
       }
     }
     this.drawFns().initCanvas();
