@@ -10,16 +10,6 @@
       </h2>
     </a-col>
     <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen"></a-col>
-    <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen">
-      <a-button
-        style="width: 150px"
-        size="large"
-        type="primary"
-        class="add-new-btn"
-        @click="openModalSave"
-        ><span class="add-new-btn-text">SAVE</span></a-button
-      >
-    </a-col>
     <a-col :span="1" class="icon-btn-wrapper">
       <div
         class="icon-btn"
