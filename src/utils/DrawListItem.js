@@ -1,5 +1,4 @@
 import { __dnd, __konva } from "./DrawCanvas";
-import { store } from "../store";
 
 export function searchIntersection(r2) {
   const allRects = __konva.stage.find("Rect");
@@ -7,7 +6,7 @@ export function searchIntersection(r2) {
   const listRects = allRects.filter(
     (rect) =>
       !!rect.attrs.id &&
-      rect.attrs.id.includes("LIST-") &&
+      (rect.attrs.id.includes("LIST-") || rect.attrs.id.includes("ADD-MORE")) &&
       !rect.attrs.id.includes("CARD-") &&
       !rect.attrs.id.includes("TITLE-RECT")
   );
@@ -41,8 +40,8 @@ export function searchIntersection(r2) {
       !(
         r2.position().x > r1.x() + r1.width() - 200 ||
         r2.position().x + r2.width() - 200 < r1.x() ||
-        r2.position().y > r1.y() + r1.height() ||
-        r2.position().y + r2.height() < r1.y()
+        r2.position().y > r1.y() + r1.height() - 100 ||
+        r2.position().y + r2.height() - 100 < r1.y()
       )
     ) {
       return true;
@@ -101,7 +100,9 @@ export function initListItem(list, x, e) {
     titleText.on("dragend", (e) => {
       const dragOverList = __dnd.list;
       const dragOverItem = __dnd.item;
-      const parentList = store.getters.kanbanList.find((data) => data?.id === list?.id);
+      const parentList = this.$store.getters.kanbanList.find(
+        (data) => data?.id === list?.id
+      );
 
       if (!dragOverList) {
         const parentItemIndex = parentList.children.findIndex(
@@ -109,15 +110,16 @@ export function initListItem(list, x, e) {
             item?.id.toString() === dragOverItem?.attrs?.id.split("CARD-")[1]
         );
         if (parentItemIndex > -1) {
-          parentList.children = parentList.children.filter(
-            (v) => v.id !== card.id
-          );
-          parentList.children.splice(parentItemIndex, 0, card);
+          this.$store.commit("swapKanbanCardInternal", {
+            parentItemIndex,
+            list,
+            card,
+          });
         }
       }
 
       if (!!dragOverList) {
-        const foundList = store.getters.kanbanList.find(
+        const foundList = this.$store.getters.kanbanList.find(
           (data) =>
             data?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
         );
@@ -135,9 +137,6 @@ export function initListItem(list, x, e) {
           parentList.children = parentList.children.filter(
             (v) => v.id !== card.id
           );
-          if (parentList.children.length <= 4) {
-            this.drawFns().initCanvas();
-          }
         }
 
         if (
@@ -149,16 +148,16 @@ export function initListItem(list, x, e) {
           } else {
             foundList.children.push(card);
           }
-          if (foundList.children.length > 3) {
-            this.drawFns().initCanvas();
-          }
+          this.$store.commit("swapKanbanCardExternal", {
+            foundList,
+            parentList,
+          });
           cardRect.destroy();
           titleText.destroy();
-          this.drawFns().initListItem(foundList, dragOverList.x());
         }
       }
 
-      this.drawFns().initListItem(parentList, x);
+      this.drawFns().initCanvas();
       __dnd.list = null;
       __dnd.item = null;
     });

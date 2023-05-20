@@ -67,24 +67,36 @@ export default function getTile({ largestChildren, height }) {
   });
 
   tile.on("dragend", (e) => {
-    console.log(e);
     const list = e?.currentTarget?.attrs?.listDetails;
     const dragOverList = __dnd.list;
     if (!!dragOverList) {
-      const currentList = store.getters.kanbanList.find(
+      const currentList = this.$store.getters.kanbanList.find(
         (data) => data?.id === list?.id
       );
-      const currentListIndex = store.getters.kanbanList.findIndex(
+      const currentListIndex = this.$store.getters.kanbanList.findIndex(
         (data) => data?.id === list?.id
       );
-      const foundListIndex = store.getters.kanbanList.findIndex(
+      const foundListIndex = this.$store.getters.kanbanList.findIndex(
         (item) =>
           item?.id.toString() === dragOverList?.attrs?.id.split("LIST-")[1]
       );
 
       if (currentListIndex > -1 && foundListIndex > -1) {
-        store.getters.kanbanList.splice(currentListIndex, 1);
-        store.getters.kanbanList.splice(foundListIndex, 0, currentList);
+        this.$store.commit("swapKanbanList", {
+          currentListIndex,
+          foundListIndex,
+          currentList,
+        });
+      } else if (
+        currentListIndex > -1 &&
+        dragOverList?.attrs?.id.includes("ADD-MORE")
+      ) {
+        const lastIndex = this.$store.getters.kanbanList.length;
+        this.$store.commit("swapKanbanList", {
+          currentListIndex,
+          foundListIndex: lastIndex,
+          currentList,
+        });
       }
     }
     this.drawFns().initCanvas();

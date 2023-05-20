@@ -59,7 +59,7 @@ export default function getAddText() {
       relatedText.moveToTop();
       yCount = yCount + 190;
     });
-    
+
     const { list: dndList } = searchIntersection(e.currentTarget);
     __dnd.list = dndList;
   });
@@ -68,7 +68,9 @@ export default function getAddText() {
     const list = e?.currentTarget?.attrs?.listDetails;
     const dragOverList = __dnd.list;
     if (!!dragOverList) {
-      const currentList = this.$store.getters.kanbanList.find((data) => data?.id === list?.id);
+      const currentList = this.$store.getters.kanbanList.find(
+        (data) => data?.id === list?.id
+      );
       const currentListIndex = this.$store.getters.kanbanList.findIndex(
         (data) => data?.id === list?.id
       );
@@ -78,8 +80,21 @@ export default function getAddText() {
       );
 
       if (currentListIndex > -1 && foundListIndex > -1) {
-        this.$store.getters.kanbanList.splice(currentListIndex, 1);
-        this.$store.getters.kanbanList.splice(foundListIndex, 0, currentList);
+        this.$store.commit("swapKanbanList", {
+          currentListIndex,
+          foundListIndex,
+          currentList,
+        });
+      } else if (
+        currentListIndex > -1 &&
+        dragOverList?.attrs?.id.includes("ADD-MORE")
+      ) {
+        const lastIndex = this.$store.getters.kanbanList.length;
+        this.$store.commit("swapKanbanList", {
+          currentListIndex,
+          foundListIndex: lastIndex,
+          currentList,
+        });
       }
     }
     this.drawFns().initCanvas();

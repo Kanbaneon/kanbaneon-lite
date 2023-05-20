@@ -50,19 +50,7 @@ export function deleteCard(deletingCard) {
 }
 
 export function editCard(editingCard) {
-  const foundList = this.$store.getters.kanbanList.find(
-    (v) => v.id === editingCard.listId
-  );
-  if (!Array.isArray(foundList?.children)) {
-    return;
-  }
-
-  const foundItem = foundList.children.find((v) => v.id === editingCard.id);
-  if (!foundItem?.id) {
-    return;
-  }
-
-  foundItem.text = editingCard.text;
+  this.$store.commit("editKanbanCard", editingCard);
   this.drawFns().initList();
 }
 

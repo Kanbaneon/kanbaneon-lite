@@ -76,6 +76,7 @@ export function initList() {
   addMoreRect.fill("rgba(255,255,255,0.3)");
   addMoreRect.stroke("white");
   addMoreRect.dash([5, 5]);
+  addMoreRect.id("ADD-MORE-RECT");
 
   const addMoreText = standardText.clone();
   addMoreText.draggable(false);
@@ -83,6 +84,7 @@ export function initList() {
   addMoreText.x(xCount + 10);
   addMoreText.fontSize(15);
   addMoreText.fill("white");
+  addMoreText.id("ADD-MORE-TEXT");
 
   __konva.layer.add(addMoreRect);
   __konva.layer.add(addMoreText);
