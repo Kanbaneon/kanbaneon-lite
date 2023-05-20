@@ -15,19 +15,12 @@ export const __dnd = {
   item: null,
 };
 
-export function addMoreCard(newCard) {
-  const foundList = this.$store.getters.kanbanList.find(
-    (v) => v.id === newCard.listId
-  );
-  if (!Array.isArray(foundList?.children)) {
-    return;
-  }
-
-  foundList.children.push({
+export function addMoreCard({ listId, text }) {
+  const newCard = {
     id: uuid.v4(),
-    text: newCard?.text,
-  });
-  this.$store.commit("setKanbanBoards", newCard.listId);
+    text: text,
+  };
+  this.$store.commit("addKanbanCard", { listId, newCard });
   this.drawFns().initCanvas();
 }
 
@@ -42,40 +35,17 @@ export function addMoreList(newList) {
 }
 
 export function deleteList(deletingList) {
-  const foundListIndex = this.$store.getters.kanbanList.findIndex(
-    (v) => v.id === deletingList.listId
-  );
-  if (foundListIndex <= -1) {
-    return;
-  }
-
-  this.$store.getters.kanbanList.splice(foundListIndex, 1);
+  this.$store.commit("deleteKanbanList", deletingList);
   this.drawFns().initList();
 }
 
 export function editList(editingList) {
-  const foundList = this.$store.getters.kanbanList.find(
-    (v) => v.id === editingList.listId
-  );
-  if (!foundList?.id) {
-    return;
-  }
-
-  foundList.name = editingList.name;
+  this.$store.commit("editKanbanList", editingList);
   this.drawFns().initList();
 }
 
 export function deleteCard(deletingCard) {
-  const foundList = this.$store.getters.kanbanList.find(
-    (v) => v.id === deletingCard.listId
-  );
-  if (!Array.isArray(foundList?.children)) {
-    return;
-  }
-
-  foundList.children = foundList.children.filter(
-    (v) => v.id !== deletingCard.id
-  );
+  this.$store.commit("deleteKanbanCard", deletingCard);
   this.drawFns().initList();
 }
 

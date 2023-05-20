@@ -9,7 +9,7 @@
         KAN<span class="subtitle">BANEON</span>
       </h2>
     </a-col>
-    <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen"> </a-col>
+    <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen"></a-col>
     <a-col :xl="3" :md="4" :xxl="2" v-if="showNewList && largeScreen">
       <a-button
         style="width: 150px"
@@ -96,6 +96,12 @@
       </a-button>
     </template>
   </a-modal>
+  <h3>
+    <a-breadcrumb>
+      <a-breadcrumb-item><a href="/">Home</a></a-breadcrumb-item>
+      <a-breadcrumb-item>{{ currentBoard.name }}</a-breadcrumb-item>
+    </a-breadcrumb>
+  </h3>
 </template>
 
 <script>
@@ -138,6 +144,9 @@ export default {
       await this.handleCheckRoute();
     },
   },
+  mounted() {
+    this.handleCheckRoute();
+  },
   methods: {
     openModalSave() {
       this.visibleSave = true;
@@ -161,16 +170,15 @@ export default {
       this.$router.push("/");
     },
     async handleOkEditBoard() {
-      const currentBoardIndex = this.$store.state.kanbanBoards.findIndex(
-        (v) => v.id === this.$store.state.currentBoardID
-      );
-      this.$store.state.kanbanBoards[currentBoardIndex].name =
-        this.boardDialog.editingBoard.name;
-
-      this.currentBoard = this.$store.state.kanbanBoards[currentBoardIndex];
+      this.currentBoard.name = this.boardDialog.editingBoard.name;
+      this.$store.commit("editKanbanBoard", this.boardDialog.editingBoard);
       this.handleCancelEditBoard();
     },
     async handleDeleteBoard() {
+      this.$store.commit(
+        "deleteKanbanBoard",
+        this.$store.getters.currentBoardID
+      );
       this.$router.push("/");
       this.handleCancelEditBoard();
     },
@@ -231,6 +239,10 @@ export default {
 </script>
 
 <style scoped>
+h3 {
+  padding-left: 8px;
+  margin: 0px;
+}
 .icon-btn-wrapper {
   display: flex;
   justify-content: center;

@@ -67,10 +67,13 @@ export default function getTile({ largestChildren, height }) {
   });
 
   tile.on("dragend", (e) => {
+    console.log(e);
     const list = e?.currentTarget?.attrs?.listDetails;
     const dragOverList = __dnd.list;
     if (!!dragOverList) {
-      const currentList = store.getters.kanbanList.find((data) => data?.id === list?.id);
+      const currentList = store.getters.kanbanList.find(
+        (data) => data?.id === list?.id
+      );
       const currentListIndex = store.getters.kanbanList.findIndex(
         (data) => data?.id === list?.id
       );
