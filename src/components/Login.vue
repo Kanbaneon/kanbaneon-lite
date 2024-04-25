@@ -4,7 +4,7 @@
       <a-card class="card">
         <h2 class="title">
           KAN<span class="subtitle">BANEON</span>
-          <span class="version"> Lite</span>
+          <span class="version" v-if="isLite"> Lite</span>
         </h2>
         <div class="input-wrapper">
           <a-input v-model:value="username" placeholder="Enter your username" />
