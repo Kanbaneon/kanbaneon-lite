@@ -5,10 +5,14 @@ import "ant-design-vue/dist/antd.css";
 import { router } from "./routes";
 import { setUpDB, store } from "./store";
 
-await setUpDB();
-
-const app = createApp(App);
-app.use(Antd);
-app.use(store)
-app.use(router);
-app.mount("#app");
+setUpDB()
+  .then(() => {
+    const app = createApp(App);
+    app.use(Antd);
+    app.use(store);
+    app.use(router);
+    app.mount("#app");
+  })
+  .catch((ex) => {
+    console.error(ex);
+  });
