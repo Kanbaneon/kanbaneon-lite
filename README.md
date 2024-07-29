@@ -7,6 +7,8 @@
 
 <hr/>
 
+# THIS REPO IS DEPRECATED AND https://kanbaneon-lite.netlify.app/ IS NOW HOSTED FROM A MONO REPO https://github.com/Kanbaneon/kanbaneon
+
  - Easy and Fast Drag And Drop Kanban Card
  - Attractive UI/UX design
  - No DOM element for Kanban
